@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/scaffold_wrapper.dart';
+import '../../widgets/scaffold_wrapper.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -9,7 +9,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ScaffoldWrapper(
         child: Center(
-      child: Text('Home View'),
+      child: Text('Bookmark View'),
     ));
   }
 }
