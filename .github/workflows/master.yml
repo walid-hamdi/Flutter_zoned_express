@@ -38,9 +38,9 @@ jobs:
       - name: Save IPA as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: app-release.ipa
+          name: Runner.ipa
           path: build/ios/iphoneos/Runner.ipa
-          
+           
   build_apk:
     name: Build Flutter (Android)
     needs: [flutter_test]
