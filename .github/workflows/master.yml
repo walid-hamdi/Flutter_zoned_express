@@ -35,7 +35,12 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build ios --release --no-codesign
-
+      - name: Save IPA as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release.ipa
+          path: build/ios/iphoneos/Runner.ipa
+          
   build_apk:
     name: Build Flutter (Android)
     needs: [flutter_test]
