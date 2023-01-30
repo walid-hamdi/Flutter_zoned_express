@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../views/home_view.dart';
+import '../views/home/home_view.dart';
 import '../themes/custom_theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'App Name',
+      title: 'Zoned Express',
       theme: customTheme,
       home: const HomeView(),
     );
