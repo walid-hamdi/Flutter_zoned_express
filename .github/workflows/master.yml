@@ -36,7 +36,7 @@ jobs:
       - run: flutter clean
       - run: flutter build ios --release --no-codesign
 
-  build_appbundle:
+  build_apk:
     name: Build Flutter (Android)
     needs: [flutter_test]
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
           channel: "stable"
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build appbundle
+      - run: flutter build apk --release
       - name: Save APK as artifact
         uses: actions/upload-artifact@v2
         with:
