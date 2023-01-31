@@ -63,3 +63,15 @@ jobs:
         with:
           name: my-artifact
           path: my_files.tar
+      - name: Send artifact via Gmail
+        uses: actions/email@v1
+        with:
+          server_host: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
+          to: walidhamdi@gmail.com
+          subject: Build artifact for Flutter app
+          body: The build artifact for the Flutter app is attached.
+          attach_type: application/tar
+          attach_file: my_files.tar     
