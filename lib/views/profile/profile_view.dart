@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/scaffold_wrapper.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({Key? key}) : super(key: key);
+class ProfileView extends StatelessWidget {
+  const ProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
