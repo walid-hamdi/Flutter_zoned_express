@@ -15,7 +15,7 @@ class NewsletterList extends StatelessWidget {
         readTime: "5 min",
         writer: "Jane Doe",
         topic: "Design",
-        imageUrl: "https://picsum.photos/300/200",
+        imageUrl: "https://picsum.photos/300/200?image=100",
       ),
       Newsletter(
         title: "Tech News",
@@ -23,7 +23,7 @@ class NewsletterList extends StatelessWidget {
         readTime: "10 min",
         writer: "John Doe",
         topic: "Technology",
-        imageUrl: "https://picsum.photos/300/200",
+        imageUrl: "https://picsum.photos/300/200?image=101",
       ),
       Newsletter(
         title: "Marketing Tips",
@@ -32,21 +32,22 @@ class NewsletterList extends StatelessWidget {
         readTime: "15 min",
         writer: "Jane Smith",
         topic: "Marketing",
-        imageUrl: "https://picsum.photos/300/200",
+        imageUrl: "https://picsum.photos/300/200?image=102",
       ),
     ];
 
     return SizedBox(
-      height: 150,
+      height: 289,
       child: ListView.builder(
-        shrinkWrap: true,
+        // shrinkWrap: true,
         itemCount: newsletters.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 22),
-            child: NewsletterCard(newsletter: newsletters[index]),
-          );
+          return Container(
+              width: MediaQuery.of(context).size.width / 1.3,
+              height: double.infinity,
+              margin: const EdgeInsets.only(right: 8),
+              child: NewsletterCard(newsletter: newsletters[index]));
         },
       ),
     );

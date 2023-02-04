@@ -14,8 +14,8 @@ class SearchBox extends StatelessWidget {
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
-            offset: Offset(0, 2),
-            blurRadius: 2,
+            offset: Offset(0, 1),
+            blurRadius: 1,
           ),
         ],
       ),
@@ -24,6 +24,7 @@ class SearchBox extends StatelessWidget {
           hintText: "Search for any newsletter",
           hintStyle: TextStyle(
             color: Colors.grey,
+            fontSize: 14,
           ),
           icon: Icon(
             Icons.search,
