@@ -14,4 +14,6 @@ class Newsletter {
     required this.topic,
     required this.imageUrl,
   });
+
+  contains(String searchTerm) {}
 }

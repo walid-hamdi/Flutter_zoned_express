@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/newsletter.dart';
-import 'newsletter_card.dart';
+import '../../../widgets/list_card.dart';
 
 class ArticleList extends StatelessWidget {
   const ArticleList({Key? key}) : super(key: key);
@@ -37,15 +37,15 @@ class ArticleList extends StatelessWidget {
     ];
 
     return SizedBox(
-      height: 150,
+      // height: 150,
       child: ListView.builder(
-        shrinkWrap: true,
+        // shrinkWrap: true,
         itemCount: newsletters.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (BuildContext context, int index) {
           return Padding(
-            padding: const EdgeInsets.only(right: 22),
-            child: NewsletterCard(newsletter: newsletters[index]),
+            padding: const EdgeInsets.only(bottom: 22),
+            child: ListCard(newsletter: newsletters[index]),
           );
         },
       ),
