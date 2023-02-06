@@ -20,7 +20,8 @@ class _HomeViewState extends State<HomeView> {
   final List<Newsletter> _newsletters = [
     Newsletter(
       title: "Design Inspiration",
-      description: "Get weekly inspiration for designing websites and apps.",
+      description:
+          "Get weekly inspiration for designing websites and apps. Discover the latest design trends, tips, and tricks for creating visually appealing and user-friendly designs. Whether you're a beginner or a seasoned designer, this newsletter is a must-read for staying up-to-date on the latest design industry news. Get weekly inspiration for designing websites and apps. Discover the latest design trends, tips, and tricks for creating visually appealing and user-friendly designs. Whether you're a beginner or a seasoned designer, this newsletter is a must-read for staying up-to-date on the latest design industry news.",
       readTime: "5 min",
       writer: "Jane Doe",
       topic: "Design",
@@ -28,7 +29,8 @@ class _HomeViewState extends State<HomeView> {
     ),
     Newsletter(
       title: "Tech News",
-      description: "Stay up-to-date on the latest tech news and trends.",
+      description:
+          "Stay up-to-date on the latest tech news and trends. From groundbreaking new technologies to emerging startups, this newsletter covers it all. Get insights into the future of tech and stay ahead of the curve with the latest updates and analysis.",
       readTime: "10 min",
       writer: "John Doe",
       topic: "Technology",
@@ -37,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
     Newsletter(
       title: "Marketing Tips",
       description:
-          "Learn the latest marketing strategies to grow your business.",
+          "Learn the latest marketing strategies to grow your business. Whether you're looking to improve your SEO, increase conversions, or simply get more traffic, this newsletter is packed with actionable tips and advice to help you achieve your marketing goals.",
       readTime: "15 min",
       writer: "Jane Smith",
       topic: "Marketing",
@@ -57,8 +59,11 @@ class _HomeViewState extends State<HomeView> {
       child: CustomContainer(
         child: ListView(
           children: [
+            const SizedBox(
+              height: 10,
+            ),
             const Navbar(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 22),
             SearchBox(
               onChanged: _updateSearchTerm,
             ),

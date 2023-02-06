@@ -24,45 +24,47 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: GNav(
-        haptic: true, // haptic feedback
-        tabBorderRadius: 20,
-        curve: Curves.easeInExpo, // tab animation curves
-        duration: const Duration(milliseconds: 900), // tab animation duration
-        gap: 4, // the tab button gap between icon and text
-        color: Colors.black,
-        tabMargin: const EdgeInsets.symmetric(
-            horizontal: 10, vertical: 5), // unselected icon color
-        activeColor: Colors.white,
-        // selected icon and text color
-        iconSize: 24, // tab button icon size
-        tabBackgroundColor: Colors.black, // selected tab background color
-        padding: const EdgeInsets.symmetric(
-            horizontal: 6, vertical: 7), // navigation bar padding
-        tabs: const [
-          GButton(
-            icon: Icons.home,
-            text: 'Home',
-          ),
-          GButton(
-            icon: Icons.explore_outlined,
-            text: 'Explore',
-          ),
-          GButton(
-            icon: Icons.bookmark_outline,
-            text: 'Bookmark',
-          ),
-          GButton(
-            icon: Icons.person,
-            text: 'Profile',
-          )
-        ],
-        selectedIndex: _selectedIndex,
-        onTabChange: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: GNav(
+          haptic: true, // haptic feedback
+          tabBorderRadius: 20,
+          curve: Curves.easeInExpo, // tab animation curves
+          duration: const Duration(milliseconds: 900), // tab animation duration
+          gap: 4, // the tab button gap between icon and text
+          color: Colors.black,
+          tabMargin: const EdgeInsets.symmetric(
+              horizontal: 10, vertical: 5), // unselected icon color
+          activeColor: Colors.white, // selected icon and text color
+          iconSize: 24, // tab button icon size
+          tabBackgroundColor: Colors.black, // selected tab background color
+          padding: const EdgeInsets.symmetric(
+              horizontal: 6, vertical: 7), // navigation bar padding
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.explore_outlined,
+              text: 'Explore',
+            ),
+            GButton(
+              icon: Icons.bookmark_outline,
+              text: 'Bookmark',
+            ),
+            GButton(
+              icon: Icons.person,
+              text: 'Profile',
+            )
+          ],
+          selectedIndex: _selectedIndex,
+          onTabChange: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
       ),
     );
   }
