@@ -31,57 +31,27 @@ class ProfileView extends StatelessWidget {
       ),
       child: ListView(
         children: [
+          const SizedBox(
+            height: 16,
+          ),
           Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[700],
-
-              // image: DecorationImage(
-              //   image: NetworkImage('https://picsum.photos/300/200?image=103'),
-              //   fit: BoxFit.cover,
-              // ),
+            alignment: Alignment.center,
+            child: CachedNetworkImageWidget(
+              imageUrl:
+                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              imageBuilder: (context, imageProvider) => CircleAvatar(
+                radius: 40,
+                backgroundImage: imageProvider,
+              ),
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const SizedBox(
+                height: 90,
+                child: Icon(Icons.error),
+              ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CachedNetworkImageWidget(
-                  imageUrl:
-                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    radius: 50,
-                    backgroundImage: imageProvider,
-                  ),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const SizedBox(
-                    height: 90,
-                    child: Icon(Icons.error),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'UserName',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'user@email.com',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+          ),
+          const SizedBox(
+            height: 16,
           ),
           Expanded(
             child: Container(
@@ -93,7 +63,7 @@ class ProfileView extends StatelessWidget {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     const SizedBox(
