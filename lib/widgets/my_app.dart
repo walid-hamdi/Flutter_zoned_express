@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Zoned Express',
       theme: customTheme,
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       home: const CustomBottomBar(),
     );
   }

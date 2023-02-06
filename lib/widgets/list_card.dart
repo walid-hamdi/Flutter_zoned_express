@@ -67,7 +67,10 @@ class _ListCardState extends State<ListCard>
                   ),
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget: (context, url, error) => const SizedBox(
+                    height: 90,
+                    child: Icon(Icons.error),
+                  ),
                 ),
               ),
             ),
