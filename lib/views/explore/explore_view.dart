@@ -17,7 +17,7 @@ class ExploreView extends StatefulWidget {
 
 class _ExploreViewState extends State<ExploreView> {
   String? _searchTerm;
-  Stream<List<Newsletter>?> _newslettersStream = getNewsletters();
+  final Stream<List<Newsletter>?> _newslettersStream = getNewsletters();
 
   void _updateSearchTerm(String value) {
     setState(() {

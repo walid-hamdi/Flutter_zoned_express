@@ -20,6 +20,7 @@ dependencies:
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.1
   dart_code_metrics: ^5.5.1
+  firebase_auth: ^4.2.5
   firebase_core: ^2.4.1
   flutter:
     sdk: flutter
@@ -63,6 +64,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,6 +4,7 @@ import '../../../widgets/custom_appbar.dart';
 // import '../../widgets/custom_container.dart';
 import '../../../widgets/scaffold_wrapper.dart';
 import '../../../widgets/cached_image.dart';
+import '../settings/settings_view.dart';
 import '../sign_in/sign_in_view.dart';
 
 class ProfileView extends StatelessWidget {
@@ -16,20 +17,31 @@ class ProfileView extends StatelessWidget {
         context: context,
         title: "Profile",
         widget: PopupMenuButton(
-          itemBuilder: (context) => [
+          onSelected: (result) {
+            if (result == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SignInView(),
+                ),
+              );
+            } else if (result == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsView(),
+                ),
+              );
+            }
+          },
+          itemBuilder: (cnx) => [
             const PopupMenuItem(
+              value: 0,
               child: Text("Settings"),
             ),
-            PopupMenuItem(
-              child: const Text("Sign In/Sign Out"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignInView(),
-                  ),
-                );
-              },
+            const PopupMenuItem(
+              value: 1,
+              child: Text("Sign Out"),
             ),
           ],
           icon: const Icon(Icons.more_vert),
