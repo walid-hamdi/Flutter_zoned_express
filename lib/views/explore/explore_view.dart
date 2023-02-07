@@ -4,8 +4,9 @@ import 'package:zoned_express/widgets/search_box.dart';
 
 import '../../widgets/category_filter.dart';
 import '../../widgets/custom_container.dart';
+import '../../widgets/newsletter_list.dart';
 import '../../widgets/scaffold_wrapper.dart';
-import 'widgets/newsletter_list.dart';
+import '../../services/get_newsletter.dart';
 
 class ExploreView extends StatefulWidget {
   const ExploreView({Key? key}) : super(key: key);
@@ -16,33 +17,7 @@ class ExploreView extends StatefulWidget {
 
 class _ExploreViewState extends State<ExploreView> {
   String? _searchTerm;
-  final List<Newsletter> _newsletters = [
-    Newsletter(
-      title: "Design Inspiration",
-      description: "Get weekly inspiration for designing websites and apps.",
-      readTime: "5 min",
-      writer: "Jane Doe",
-      topic: "Design",
-      imageUrl: "https://picsum.photos/300/200?image=100",
-    ),
-    Newsletter(
-      title: "Tech News",
-      description: "Stay up-to-date on the latest tech news and trends.",
-      readTime: "10 min",
-      writer: "John Doe",
-      topic: "Technology",
-      imageUrl: "https://picsum.photos/300/200?image=101",
-    ),
-    Newsletter(
-      title: "Marketing Tips",
-      description:
-          "Learn the latest marketing strategies to grow your business.",
-      readTime: "15 min",
-      writer: "Jane Smith",
-      topic: "Marketing",
-      imageUrl: "https://picsum.photos/300/200?image=102",
-    ),
-  ];
+  Stream<List<Newsletter>?> _newslettersStream = getNewsletters();
 
   void _updateSearchTerm(String value) {
     setState(() {
@@ -50,23 +25,31 @@ class _ExploreViewState extends State<ExploreView> {
     });
   }
 
-  List<Newsletter>? _filteredList;
+  Stream<List<Newsletter>?>? _filteredStreamList;
 
   void _filterNewsletters(String topic) {
     if (topic == "All") {
       return setState(() {
-        _filteredList = _newsletters;
+        _filteredStreamList = _newslettersStream;
       });
     }
+
     setState(() {
-      _filteredList = _newsletters
-          .where((newsletter) => newsletter.topic == topic)
-          .toList();
+      _filteredStreamList = _newslettersStream.map(
+        (newsletters) => newsletters
+            ?.where((newsletter) => newsletter.topic == topic)
+            .toList(),
+      );
     });
   }
 
-  List<String> getTopics() {
-    return _newsletters.map((newsletter) => newsletter.topic).toSet().toList();
+  Stream<List<String>> getTopics() {
+    return _newslettersStream.map(
+      (newsletters) => [
+        "All",
+        ...newsletters!.map((newsletter) => newsletter.topic).toSet().toList()
+      ],
+    );
   }
 
   @override
@@ -79,7 +62,7 @@ class _ExploreViewState extends State<ExploreView> {
           height: 10,
         ),
         CategoryFilter(
-          categories: ["All", ...getTopics()],
+          categories: getTopics(),
           onCategorySelected: _filterNewsletters,
         ),
         const SizedBox(
@@ -87,10 +70,32 @@ class _ExploreViewState extends State<ExploreView> {
         ),
         NewsletterList(
           searchTerm: _searchTerm,
-          newsletters: _filteredList ?? _newsletters,
+          newsletters: _filteredStreamList ?? _newslettersStream,
         ),
         // vertical list of articles
       ]),
     ));
   }
 }
+
+
+
+
+// in home view :
+// 1- when refresh refresh icon appear to refresh all connections
+// 2- add the ability to like, add to bookmark, or share
+// 3- add article list with all functionalities
+// 4- handle notification icon to inform the new change
+
+// in explore view:
+// 1- fix filter by category
+// 2- add article list
+
+  //  in bookmark
+  // 1- show all bookmarks related to that specific user
+  // 2- ability to remove all bookmarks or one bookmark
+
+// in profile view
+// 1- show all user auth info
+// 2- show all login / register views if the user logout
+// 3- add settings view to change user info / theme of the app

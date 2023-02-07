@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:zoned_express/models/newsletter.dart';
-import 'package:zoned_express/views/explore/widgets/newsletter_list.dart';
 import 'package:zoned_express/widgets/search_box.dart';
 
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_container.dart';
+import '../../widgets/newsletter_list.dart';
 import '../../widgets/scaffold_wrapper.dart';
 
 class BookmarkView extends StatefulWidget {
@@ -74,10 +74,10 @@ class _BookmarkViewState extends State<BookmarkView> {
           const SizedBox(
             height: 10,
           ),
-          NewsletterList(
-            searchTerm: _searchTerm,
-            newsletters: _newsletters,
-          ),
+          // NewsletterList(
+          //   searchTerm: _searchTerm,
+          //   newsletters: _newsletters,
+          // ),
         ],
       )),
     );

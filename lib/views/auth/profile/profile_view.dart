@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/custom_appbar.dart';
+import '../../../widgets/custom_appbar.dart';
 // import '../../widgets/custom_container.dart';
-import '../../widgets/scaffold_wrapper.dart';
-import '../../widgets/cached_image.dart';
+import '../../../widgets/scaffold_wrapper.dart';
+import '../../../widgets/cached_image.dart';
+import '../sign_in/sign_in_view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -15,15 +16,20 @@ class ProfileView extends StatelessWidget {
         context: context,
         title: "Profile",
         widget: PopupMenuButton(
-          itemBuilder: (context) => const [
-            PopupMenuItem(
-              child: Text("Option 1"),
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              child: Text("Settings"),
             ),
             PopupMenuItem(
-              child: Text("Option 2"),
-            ),
-            PopupMenuItem(
-              child: Text("Option 3"),
+              child: const Text("Sign In/Sign Out"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SignInView(),
+                  ),
+                );
+              },
             ),
           ],
           icon: const Icon(Icons.more_vert),

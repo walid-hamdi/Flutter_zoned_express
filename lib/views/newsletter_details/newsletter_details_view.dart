@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:zoned_express/models/newsletter.dart';
-import 'package:zoned_express/widgets/cached_image.dart';
+
+import '../../../models/newsletter.dart';
+import '../../../widgets/cached_image.dart';
 
 class NewsletterDetailsView extends StatelessWidget {
   final Newsletter newsletter;
