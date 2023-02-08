@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../models/newsletter.dart';
-import '../../services/get_newsletter.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/scaffold_wrapper.dart';
-import '../../widgets/label.dart';
+import '../../widgets/custom_label.dart';
 // import 'widgets/article_list.dart';
 import 'widgets/navbar.dart';
-import '../../widgets/search_box.dart';
-import '../../widgets/newsletter_list.dart';
+import '../../widgets/custom_search_box.dart';
+import '../../widgets/custom_newsletter_list.dart';
+import "../../services/database.dart";
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -19,7 +19,8 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   String? _searchTerm;
-  final Stream<List<Newsletter>?> _newslettersStream = getNewsletters();
+  final Stream<List<Newsletter>?> _newslettersStream =
+      DatabaseService().newsletters;
 
   void _updateSearchTerm(String value) {
     setState(() {

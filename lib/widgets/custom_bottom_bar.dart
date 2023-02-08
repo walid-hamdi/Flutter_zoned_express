@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:provider/provider.dart";
 
 import "../views/all.dart";
+import "../services/auth.dart";
 
 class CustomBottomBar extends StatefulWidget {
   const CustomBottomBar({Key? key}) : super(key: key);
@@ -13,11 +16,12 @@ class CustomBottomBar extends StatefulWidget {
 class _CustomBottomBarState extends State<CustomBottomBar> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeView(),
-    ExploreView(),
-    BookmarkView(),
-    ProfileView(),
+  // ignore: prefer_final_fields
+  static List<Widget> _widgetOptions = [
+    const HomeView(),
+    const ExploreView(),
+    const BookmarkView(),
+    const Wrapper(),
   ];
 
   @override

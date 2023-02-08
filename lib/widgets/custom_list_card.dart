@@ -134,11 +134,11 @@ class _ListCardState extends State<ListCard>
                         children: [
                           const Icon(Icons.thumb_up),
                           const SizedBox(
-                            width: 10,
+                            width: 13,
                           ),
                           const Icon(Icons.bookmark_border),
                           const SizedBox(
-                            width: 10,
+                            width: 13,
                           ),
                           const Icon(Icons.share),
                           const SizedBox(

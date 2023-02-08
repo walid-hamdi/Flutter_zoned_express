@@ -1,155 +1,146 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
-import '../sign_up/sign_up_view.dart';
+import "../../../services/auth.dart";
+import '../../../widgets/custom_container.dart';
+import "../../../widgets/custom_error_msg.dart";
+import "../../../widgets/custom_input_field.dart";
+import '../../../widgets/custom_loading.dart';
+import "../../../widgets/scaffold_wrapper.dart";
+import "../../../widgets/custom_button.dart";
+import "../sign_up/sign_up_view.dart";
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
 
   @override
-  createState() => _SignInViewState();
+  State<SignInView> createState() => _SignInViewState();
 }
 
 class _SignInViewState extends State<SignInView> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  late String _email;
-  late String _password;
 
-  bool _validateAndSave() {
-    final form = _formKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
+  var _email = "";
+  var _password = "";
+
+  var _error = "";
+  bool _loading = false;
+
+  String? _emailValidator(String? val) => val!.isEmpty ? "Enter Email" : null;
+  String? _passwordValidator(String? val) {
+    if (val!.isEmpty) {
+      return "Enter password";
+    } else if (val.length < 6) {
+      return "Password should be at least 6 characters long.";
+    } else {
+      return null;
     }
-    return false;
   }
 
-  Future<void> _validateAndSubmit() async {
-    if (_validateAndSave()) {
-      // Perform login
-      // ...
+  _onChangeEmail(String? val) {
+    setState(() {
+      _email = val!;
+    });
+  }
+
+  _onChangePassword(String? val) {
+    setState(() {
+      _password = val!;
+    });
+  }
+
+  signInOnPressed() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+
+      debugPrint("EMAIL: $_email");
+      debugPrint("PASSWORD: $_password");
+
+      // do authenticate
+      var result = await _auth.signInWithEmailAndPassword(_email, _password);
+      debugPrint(result);
+      if (result == null) {
+        setState(
+          () {
+            _error = "Invalid Credentials.";
+            _loading = false;
+          },
+        );
+      }
     }
+  }
+
+  toggleToCreateAccountOnPressed(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignUpView(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign In'),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/icons/icon.png',
-                      height: 120,
-                      width: 120,
-                    ),
-                  ),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Email is required';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _email = value!,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Password is required';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _password = value!,
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 16),
-                  child: ElevatedButton(
-                    onPressed: _validateAndSubmit,
-                    child: const Text('Sign In'),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red[500] // Background color
-                        ),
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/icons/google_logo.png',
-                      height: 30,
-                      width: 30,
-                    ),
-                    label: const Center(child: Text('Sign In With Google')),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue[600] // Background color
-                        ),
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/icons/facebook_logo.png',
-                      height: 30,
-                      width: 30,
-                    ),
-                    label: const Center(child: Text('Sign In With Facebook')),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
-                  "Don't have an account ",
-                  style: TextStyle(
-                    height: 1.5,
-                    decoration: TextDecoration.underline,
-                    color: Color.fromARGB(255, 33, 33, 33),
-                  ),
-                ),
-                InkWell(
-                  child: const Text(
-                    "SIGN UP NOW",
-                    style: TextStyle(
-                      height: 1.5,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 33, 33, 33),
-                    ),
-                  ),
-                  onTap: () {
-                    // perform action when "SIGN UP NOW" is tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpView(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+    return _loading
+        ? const Loading()
+        : ScaffoldWrapper(
+            appBar: AppBar(
+              title: const Text("Sign In"),
             ),
-          ),
-        ),
-      ),
-    );
+            child: CustomContainer(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomInputField(
+                        hintText: "Email",
+                        icon: Icons.email,
+                        onChange: _onChangeEmail,
+                        validator: _emailValidator,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomInputField(
+                        obscureText: true,
+                        hintText: "Password",
+                        icon: Icons.lock,
+                        onChange: _onChangePassword,
+                        validator: _passwordValidator,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomBottom(
+                        onPressed: signInOnPressed,
+                        label: "Login",
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      CustomBottom(
+                        backgroundColor: Colors.blue[500],
+                        onPressed: () {
+                          toggleToCreateAccountOnPressed(context);
+                        },
+                        label: "Create new account",
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomErrorMessage(errorMsg: _error),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:zoned_express/models/newsletter.dart';
-import 'package:zoned_express/widgets/search_box.dart';
+import 'package:zoned_express/widgets/custom_search_box.dart';
 
 import '../../widgets/category_filter.dart';
 import '../../widgets/custom_container.dart';
-import '../../widgets/newsletter_list.dart';
+import '../../widgets/custom_newsletter_list.dart';
 import '../../widgets/scaffold_wrapper.dart';
-import '../../services/get_newsletter.dart';
+import "../../services/database.dart";
 
 class ExploreView extends StatefulWidget {
   const ExploreView({Key? key}) : super(key: key);
@@ -17,7 +17,8 @@ class ExploreView extends StatefulWidget {
 
 class _ExploreViewState extends State<ExploreView> {
   String? _searchTerm;
-  final Stream<List<Newsletter>?> _newslettersStream = getNewsletters();
+  final Stream<List<Newsletter>?> _newslettersStream =
+      DatabaseService().newsletters;
 
   void _updateSearchTerm(String value) {
     setState(() {

@@ -1,20 +1,49 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:zoned_express/utils/constants.dart';
+import 'database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Stream<User?> get user {
+    return _auth.authStateChanges();
+  }
+
   // sign in with email and password
-  Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
+  Future signInWithEmailAndPassword(String email, String password) async {
+    try {
+      var result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      return result.user;
+    } catch (e) {
+      return null;
+    }
   }
 
   // register with email and password
-  Future<UserCredential> registerWithEmailAndPassword(
-      String email, String password, String username, String phone) async {
-    return await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
+  Future registerWithEmailAndPassword({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      var result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // register user info
+      final DatabaseService databaseService =
+          DatabaseService(uid: result.user!.uid);
+      databaseService.updateUserInfo(
+        email: email,
+        username: username,
+        phone: defaultPhoneProfile,
+        photo: defaultProfilePlaceholderPhoto,
+      );
+      return result.user;
+    } catch (e) {
+      return null;
+    }
   }
 
   // sign out
@@ -29,7 +58,7 @@ class AuthService {
   }
 
   // get current user
-  Future<User> getCurrentUser() async {
-    return _auth.currentUser!;
-  }
+  // Future<User> getCurrentUser() async {
+  //   return _auth.currentUser!;
+  // }
 }

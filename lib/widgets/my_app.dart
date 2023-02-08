@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zoned_express/widgets/custom_bottom_bar.dart';
+import 'package:provider/provider.dart';
+
+import '../../widgets/custom_bottom_bar.dart';
+import '../services/auth.dart';
 import '../themes/custom_theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -7,11 +11,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Zoned Express',
-      theme: customTheme,
-      debugShowCheckedModeBanner: false,
-      home: const CustomBottomBar(),
-    );
+    return StreamProvider<User?>.value(
+        initialData: null,
+        value: AuthService().user,
+        child: MaterialApp(
+          title: 'Zoned Express',
+          theme: customTheme,
+          debugShowCheckedModeBanner: false,
+          home: const CustomBottomBar(),
+        ));
   }
 }

@@ -1,188 +1,153 @@
-import 'dart:io';
+import "package:flutter/material.dart";
 
-import 'package:flutter/material.dart';
-
-import '../sign_in/sign_in_view.dart';
+import "../../../services/auth.dart";
+import "../../../widgets/custom_button.dart";
+import '../../../widgets/custom_container.dart';
+import "../../../widgets/custom_error_msg.dart";
+import "../../../widgets/custom_input_field.dart";
+import '../../../widgets/custom_loading.dart';
+import "../../../widgets/scaffold_wrapper.dart";
 
 class SignUpView extends StatefulWidget {
   const SignUpView({Key? key}) : super(key: key);
 
   @override
-  createState() => _SignUpViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  late String _username;
-  late String _email;
-  late String _password;
-  late String _phoneNumber;
-  late File _photo;
 
-  bool _validateAndSave() {
-    final form = _formKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
+  var _email = "";
+  var _password = "";
+  var _username = "";
+  var _error = "";
+  bool _loading = false;
+
+  signUpOnPressed() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+      // do authenticate
+      var result = await _auth.registerWithEmailAndPassword(
+        username: _username,
+        email: _email,
+        password: _password,
+      );
+      if (result == null) {
+        setState(
+          () {
+            _error = "Error occurred.";
+            _loading = false;
+          },
+        );
+      }
     }
-    return false;
   }
 
-  Future<void> _validateAndSubmit() async {
-    if (_validateAndSave()) {
-      // Perform sign up
-      // ...
-    }
+  _onChangeUsername(String? val) {
+    setState(() {
+      _username = val!;
+    });
   }
 
-  Future<void> _pickPhoto() async {
-    // pick a photo from the gallery
-    // ...
+  _onChangeEmail(String? val) {
+    setState(() {
+      _email = val!;
+    });
+  }
+
+  _onChangePassword(String? val) {
+    setState(() {
+      _password = val!;
+    });
+  }
+
+  String? _usernameValidator(String? val) =>
+      val!.isEmpty ? "Enter username" : null;
+  String? _emailValidator(String? val) {
+    if (val!.isEmpty) {
+      return "Enter email";
+    }
+
+    RegExp regex = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    if (!regex.hasMatch(val)) {
+      return "Please provide a valid email.";
+    }
+
+    return null;
+  }
+
+  String? _passwordValidator(String? val) {
+    if (val!.isEmpty) {
+      return "Enter password";
+    } else if (val.length < 6) {
+      return "Password should be at least 6 characters long.";
+    } else {
+      return null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Container(
-                //   margin: const EdgeInsets.only(bottom: 16),
-                //   child: InkWell(
-                //     onTap: _pickPhoto,
-                //     // child: _photo == null
-                //     //     ? const CircleAvatar(
-                //     //         radius: 50,
-                //     //         child: Icon(Icons.add_a_photo),
-                //     //       )
-                //     //     : CircleAvatar(
-                //     //         radius: 50,
-                //     //         backgroundImage: FileImage(_photo),
-                //     //       ),
-                //   ),
-                // ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Username'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Username is required';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _username = value!,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Email is required';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _email = value!,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Password is required';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _password = value!,
-                ),
-                TextFormField(
-                    decoration:
-                        const InputDecoration(labelText: 'Phone Number'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Password is required';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _password = value!),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 16),
-                  child: ElevatedButton(
-                    onPressed: _validateAndSubmit,
-                    child: const Text('Sign Up'),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red[500] // Background color
-                        ),
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/icons/google_logo.png',
-                      height: 30,
-                      width: 30,
-                    ),
-                    label: const Center(child: Text('Sign Up With Google')),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue[600] // Background color
-                        ),
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/icons/facebook_logo.png',
-                      height: 30,
-                      width: 30,
-                    ),
-                    label: const Center(child: Text('Sign Up With Facebook')),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
-                  "Have an account ",
-                  style: TextStyle(
-                    height: 1.5,
-                    decoration: TextDecoration.underline,
-                    color: Color.fromARGB(255, 33, 33, 33),
-                  ),
-                ),
-                InkWell(
-                  child: const Text(
-                    "SIGN IN NOW",
-                    style: TextStyle(
-                      height: 1.5,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 33, 33, 33),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignInView(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+    return _loading
+        ? const Loading()
+        : ScaffoldWrapper(
+            appBar: AppBar(
+              title: const Text("Sign Up"),
             ),
-          ),
-        ),
-      ),
-    );
+            child: CustomContainer(
+              // padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomInputField(
+                        hintText: "Username",
+                        icon: Icons.person,
+                        onChange: _onChangeUsername,
+                        validator: _usernameValidator,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomInputField(
+                        hintText: "Email",
+                        icon: Icons.email,
+                        onChange: _onChangeEmail,
+                        validator: _emailValidator,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomInputField(
+                        obscureText: true,
+                        hintText: "Password",
+                        icon: Icons.lock,
+                        onChange: _onChangePassword,
+                        validator: _passwordValidator,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomBottom(
+                        onPressed: signUpOnPressed,
+                        label: "Create",
+                      ),
+                      CustomErrorMessage(errorMsg: _error),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

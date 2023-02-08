@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:zoned_express/models/newsletter.dart';
-import 'package:zoned_express/widgets/search_box.dart';
+import 'package:zoned_express/widgets/custom_search_box.dart';
 
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_container.dart';
-import '../../widgets/newsletter_list.dart';
+import '../../widgets/custom_newsletter_list.dart';
 import '../../widgets/scaffold_wrapper.dart';
 
 class BookmarkView extends StatefulWidget {

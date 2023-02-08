@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/newsletter.dart';
-import 'list_card.dart';
+import 'custom_list_card.dart';
 import '../views/newsletter_details/newsletter_details_view.dart';
 
 class NewsletterList extends StatelessWidget {
