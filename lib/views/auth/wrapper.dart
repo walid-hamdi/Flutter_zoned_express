@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import "package:zoned_express/widgets/custom_loading.dart";
 
+import "../../../widgets/loading.dart";
 import "./profile/profile_view.dart";
 import "./sign_in/sign_in_view.dart";
 

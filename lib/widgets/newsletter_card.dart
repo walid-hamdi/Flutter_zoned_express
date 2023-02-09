@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import '../models/newsletter.dart';
 import 'cached_image.dart';
 
-class ListCard extends StatefulWidget {
+class NewsletterCard extends StatefulWidget {
   final Newsletter newsletter;
 
-  const ListCard({Key? key, required this.newsletter}) : super(key: key);
+  const NewsletterCard({Key? key, required this.newsletter}) : super(key: key);
 
   @override
-  State<ListCard> createState() => _ListCardState();
+  State<NewsletterCard> createState() => _NewsletterCardState();
 }
 
-class _ListCardState extends State<ListCard>
+class _NewsletterCardState extends State<NewsletterCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
@@ -56,7 +56,7 @@ class _ListCardState extends State<ListCard>
                 child: CachedNetworkImageWidget(
                   imageUrl: widget.newsletter.imageUrl,
                   imageBuilder: (context, imageProvider) => Container(
-                    height: 90,
+                    height: 80,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -68,7 +68,7 @@ class _ListCardState extends State<ListCard>
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => const SizedBox(
-                    height: 90,
+                    height: 80,
                     child: Icon(Icons.error),
                   ),
                 ),
@@ -83,7 +83,7 @@ class _ListCardState extends State<ListCard>
                     Text(
                       widget.newsletter.title,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -128,19 +128,28 @@ class _ListCardState extends State<ListCard>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 15),
                     Expanded(
                       child: Row(
                         children: [
-                          const Icon(Icons.thumb_up),
+                          const Icon(
+                            Icons.thumb_up,
+                            size: 18,
+                          ),
                           const SizedBox(
                             width: 13,
                           ),
-                          const Icon(Icons.bookmark_border),
+                          const Icon(
+                            Icons.bookmark_border,
+                            size: 18,
+                          ),
                           const SizedBox(
                             width: 13,
                           ),
-                          const Icon(Icons.share),
+                          const Icon(
+                            Icons.share,
+                            size: 18,
+                          ),
                           const SizedBox(
                             width: 20,
                           ),
@@ -148,8 +157,8 @@ class _ListCardState extends State<ListCard>
                             child: Container(
                               // alignment: Alignment.topLeft,
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                                horizontal: 10,
+                                vertical: 6,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.red[200],
@@ -158,7 +167,7 @@ class _ListCardState extends State<ListCard>
                               child: Text(
                                 widget.newsletter.topic,
                                 style: const TextStyle(
-                                  // fontSize: 20,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:zoned_express/models/newsletter.dart';
-import 'package:zoned_express/widgets/custom_search_box.dart';
 
+import '../../services/database.dart';
+import '../../widgets/newsletter_list.dart';
+import '../../widgets/search_box.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_container.dart';
-import '../../widgets/custom_newsletter_list.dart';
+// import '../../widgets/newsletter_list.dart';
 import '../../widgets/scaffold_wrapper.dart';
 
 class BookmarkView extends StatefulWidget {
@@ -16,33 +18,10 @@ class BookmarkView extends StatefulWidget {
 
 class _BookmarkViewState extends State<BookmarkView> {
   String? _searchTerm;
-  final List<Newsletter> _newsletters = [
-    Newsletter(
-      title: "Design Inspiration",
-      description: "Get weekly inspiration for designing websites and apps.",
-      readTime: "5 min",
-      writer: "Jane Doe",
-      topic: "Design",
-      imageUrl: "https://picsum.photos/300/200?image=100",
-    ),
-    Newsletter(
-      title: "Tech News",
-      description: "Stay up-to-date on the latest tech news and trends.",
-      readTime: "10 min",
-      writer: "John Doe",
-      topic: "Technology",
-      imageUrl: "https://picsum.photos/300/200?image=101",
-    ),
-    Newsletter(
-      title: "Marketing Tips",
-      description:
-          "Learn the latest marketing strategies to grow your business.",
-      readTime: "15 min",
-      writer: "Jane Smith",
-      topic: "Marketing",
-      imageUrl: "https://picsum.photos/300/200?image=102",
-    ),
-  ];
+
+  final Stream<List<Newsletter>?> _newslettersStream =
+      DatabaseService().newsletters;
+
   void _updateSearchTerm(String value) {
     setState(() {
       _searchTerm = value;
@@ -74,10 +53,12 @@ class _BookmarkViewState extends State<BookmarkView> {
           const SizedBox(
             height: 10,
           ),
-          // NewsletterList(
-          //   searchTerm: _searchTerm,
-          //   newsletters: _newsletters,
-          // ),
+          NewsletterList(
+            searchTerm: _searchTerm,
+            vertical: true,
+            fullHeight: true,
+            newsletters: _newslettersStream,
+          ),
         ],
       )),
     );

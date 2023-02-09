@@ -3,9 +3,9 @@ import "package:flutter/material.dart";
 import "../../../services/auth.dart";
 import "../../../widgets/custom_button.dart";
 import '../../../widgets/custom_container.dart';
-import "../../../widgets/custom_error_msg.dart";
+import "../../../widgets/error_msg.dart";
 import "../../../widgets/custom_input_field.dart";
-import '../../../widgets/custom_loading.dart';
+import '../../../widgets/loading.dart';
 import "../../../widgets/scaffold_wrapper.dart";
 
 class SignUpView extends StatefulWidget {

@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zoned_express/services/database.dart';
-import 'package:zoned_express/utils/constants.dart';
 
+import '../../../services/database.dart';
+import '../../../utils/constants.dart';
 import '../../../widgets/cached_image.dart';
-import '../../../widgets/custom_error_msg.dart';
-import '../../../widgets/custom_label.dart';
-import '../../../widgets/custom_loading.dart';
+import '../../../widgets/error_msg.dart';
+import '../../../widgets/label.dart';
+import '../../../widgets/loading.dart';
 import '../../../widgets/scaffold_wrapper.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_input_field.dart';

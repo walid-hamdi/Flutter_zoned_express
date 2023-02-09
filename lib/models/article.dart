@@ -1,19 +1,11 @@
 class Article {
+  final String imageUrl;
   final String title;
   final String description;
-  final String readTime;
-  final String writer;
-  final String topic;
-  final String imageUrl;
 
-  Article({
+  const Article({
+    required this.imageUrl,
     required this.title,
     required this.description,
-    required this.readTime,
-    required this.writer,
-    required this.topic,
-    required this.imageUrl,
   });
-
-  contains(String searchTerm) {}
 }

@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../models/newsletter.dart';
-import 'custom_list_card.dart';
+import 'newsletter_card.dart';
 import '../views/newsletter_details/newsletter_details_view.dart';
 
 class NewsletterList extends StatelessWidget {
   final Stream<List<Newsletter>?> newsletters;
   final String? searchTerm;
   final bool? vertical;
+  final bool fullHeight;
 
   const NewsletterList({
     Key? key,
     this.vertical,
     required this.newsletters,
     required this.searchTerm,
+    this.fullHeight = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 289,
+      height: fullHeight ? double.infinity : 265,
+      width: MediaQuery.of(context).size.width,
       child: StreamBuilder<List<Newsletter>?>(
         stream: newsletters,
         builder: (context, snapshot) {
@@ -59,7 +62,7 @@ class NewsletterList extends StatelessWidget {
                   width: MediaQuery.of(context).size.width / 1.2,
                   height: double.infinity,
                   margin: const EdgeInsets.only(right: 8),
-                  child: ListCard(
+                  child: NewsletterCard(
                     newsletter: filteredNewsletters[index],
                   ),
                 ),

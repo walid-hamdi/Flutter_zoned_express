@@ -7,7 +7,7 @@ import 'package:zoned_express/utils/constants.dart';
 import '../../../services/database.dart';
 import '../../../widgets/custom_appbar.dart';
 // import '../../widgets/custom_container.dart';
-import '../../../widgets/custom_loading.dart';
+import '../../../widgets/loading.dart';
 import '../../../widgets/scaffold_wrapper.dart';
 import '../../../widgets/cached_image.dart';
 import '../settings/settings_view.dart';
