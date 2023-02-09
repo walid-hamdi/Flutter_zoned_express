@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../models/newsletter.dart';
-import 'newsletter_card.dart';
+import 'bookmark_card.dart';
 import '../views/newsletter_details/newsletter_details_view.dart';
 
-class NewsletterList extends StatelessWidget {
-  final Stream<List<Newsletter>?> newsletters;
+class BookmarkList extends StatelessWidget {
+  final Stream<List<Newsletter>?> bookmarks;
   final String? searchTerm;
 
-  const NewsletterList({
+  const BookmarkList({
     Key? key,
-    required this.newsletters,
+    required this.bookmarks,
     required this.searchTerm,
   }) : super(key: key);
 
@@ -20,7 +20,7 @@ class NewsletterList extends StatelessWidget {
       height: 265,
       width: MediaQuery.of(context).size.width,
       child: StreamBuilder<List<Newsletter>?>(
-        stream: newsletters,
+        stream: bookmarks,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -31,22 +31,20 @@ class NewsletterList extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-
           if (snapshot.data!.isEmpty) {
             return const Center(
-              child: Text("You don't have newsletters now."),
+              child: Text("You haven't add any bookmark yet."),
             );
           }
 
-          final filteredNewsletters = snapshot.data!
+          final filteredBookmarks = snapshot.data!
               .where((newsletter) => newsletter.title
                   .toLowerCase()
                   .contains(searchTerm?.toLowerCase() ?? ""))
               .toList();
 
           return ListView.builder(
-            // shrinkWrap: true,
-            itemCount: filteredNewsletters.length,
+            itemCount: filteredBookmarks.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
@@ -55,7 +53,7 @@ class NewsletterList extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => NewsletterDetailsView(
-                        newsletter: filteredNewsletters[index],
+                        newsletter: filteredBookmarks[index],
                       ),
                     ),
                   );
@@ -63,9 +61,9 @@ class NewsletterList extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.2,
                   height: double.infinity,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: NewsletterCard(
-                    newsletter: filteredNewsletters[index],
+                  margin: const EdgeInsets.only(bottom: 2),
+                  child: BookmarkCard(
+                    bookmark: filteredBookmarks[index],
                   ),
                 ),
               );

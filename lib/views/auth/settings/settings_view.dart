@@ -12,7 +12,7 @@ import '../../../widgets/loading.dart';
 import '../../../widgets/scaffold_wrapper.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_input_field.dart';
-import "../../../services/auth.dart";
+// import "../../../services/auth.dart";
 import 'widgets/language_option.dart';
 
 class SettingsView extends StatefulWidget {
@@ -23,7 +23,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   late String _photo;
   late String _username;
@@ -36,14 +35,14 @@ class _SettingsViewState extends State<SettingsView> {
   bool _loading = false;
 
   // User's current theme preference
-  late ThemeData _currentTheme;
+  // late ThemeData _currentTheme;
 
   // Function to update the user's theme preference
-  void _updateTheme(ThemeData theme) {
-    setState(() {
-      _currentTheme = theme;
-    });
-  }
+  // void _updateTheme(ThemeData theme) {
+  //   setState(() {
+  //     _currentTheme = theme;
+  //   });
+  // }
 
   updateOnPressed() async {
     if (_formKey.currentState!.validate()) {
@@ -83,11 +82,11 @@ class _SettingsViewState extends State<SettingsView> {
   //   }
   // }
 
-  _onChangePhoto(String? val) {
-    setState(() {
-      _photo = val!;
-    });
-  }
+  // _onChangePhoto(String? val) {
+  //   setState(() {
+  //     _photo = val!;
+  //   });
+  // }
 
   _onChangeUsername(String? val) {
     setState(() {
@@ -227,7 +226,7 @@ class _SettingsViewState extends State<SettingsView> {
                             Row(
                               children: [
                                 LanguageOption(
-                                  selectedLanguage: "English",
+                                  selectedLanguage: _selectedLanguage,
                                   onChangeLanguage: _onChangeLanguage,
                                 ),
                                 const SizedBox(

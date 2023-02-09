@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:zoned_express/models/newsletter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
+import '../../models/newsletter.dart';
 import '../../services/database.dart';
-import '../../widgets/newsletter_list.dart';
+import '../../widgets/bookmark_list.dart';
 import '../../widgets/search_box.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_container.dart';
-// import '../../widgets/newsletter_list.dart';
 import '../../widgets/scaffold_wrapper.dart';
 
 class BookmarkView extends StatefulWidget {
@@ -19,9 +20,6 @@ class BookmarkView extends StatefulWidget {
 class _BookmarkViewState extends State<BookmarkView> {
   String? _searchTerm;
 
-  final Stream<List<Newsletter>?> _newslettersStream =
-      DatabaseService().newsletters;
-
   void _updateSearchTerm(String value) {
     setState(() {
       _searchTerm = value;
@@ -30,6 +28,11 @@ class _BookmarkViewState extends State<BookmarkView> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = Provider.of<User?>(context);
+
+    final Stream<List<Newsletter>?> bookmarksStream =
+        DatabaseService().getUserBookmarks(user!.uid);
+
     return ScaffoldWrapper(
       appBar: CustomAppBar(
         context: context,
@@ -53,11 +56,9 @@ class _BookmarkViewState extends State<BookmarkView> {
           const SizedBox(
             height: 10,
           ),
-          NewsletterList(
+          BookmarkList(
             searchTerm: _searchTerm,
-            vertical: true,
-            fullHeight: true,
-            newsletters: _newslettersStream,
+            bookmarks: bookmarksStream,
           ),
         ],
       )),

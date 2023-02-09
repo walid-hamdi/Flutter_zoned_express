@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import '../../../models/newsletter.dart';
 import '../models/article.dart';
 
@@ -16,8 +15,8 @@ class DatabaseService {
   final CollectionReference _userCollectionReference =
       FirebaseFirestore.instance.collection('users');
 
-// store newsletters
-  void storeNewsletters(List<Newsletter> newsletters) {
+// ------------------------------------------newsletters
+  void setNewsletters(List<Newsletter> newsletters) {
     for (var newsletter in newsletters) {
       _newslettersCollectionReference.add({
         'title': newsletter.title,
@@ -30,30 +29,29 @@ class DatabaseService {
     }
   }
 
-// get newsletters
-  Stream<List<Newsletter>?> get newsletters {
-    List<Newsletter> newsletterFromSnapshot(QuerySnapshot snapshot) {
-      return snapshot.docs
-          .map(
-            (doc) => Newsletter(
-              title: doc['title'],
-              description: doc['description'],
-              readTime: doc['readTime'],
-              writer: doc['writer'],
-              topic: doc['topic'],
-              imageUrl: doc['imageUrl'],
-            ),
-          )
-          .toList();
-    }
-
-    return _newslettersCollectionReference
-        .snapshots()
-        .map(newsletterFromSnapshot);
+  List<Newsletter> _newsletterFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map(
+          (doc) => Newsletter(
+            title: doc['title'],
+            description: doc['description'],
+            readTime: doc['readTime'],
+            writer: doc['writer'],
+            topic: doc['topic'],
+            imageUrl: doc['imageUrl'],
+          ),
+        )
+        .toList();
   }
 
-  // store articles
-  void storeArticles(List<Article> articles) async {
+  Stream<List<Newsletter>?> get newsletters {
+    return _newslettersCollectionReference
+        .snapshots()
+        .map(_newsletterFromSnapshot);
+  }
+
+  // -----------------------------------------articles
+  void setArticles(List<Article> articles) async {
     for (var article in articles) {
       await _articlesCollectionReference.add({
         'title': article.title,
@@ -63,7 +61,6 @@ class DatabaseService {
     }
   }
 
-  // get articles
   Stream<List<Article>?> get articles {
     List<Article> articleFromSnapshot(QuerySnapshot snapshot) {
       return snapshot.docs
@@ -80,7 +77,40 @@ class DatabaseService {
     return _articlesCollectionReference.snapshots().map(articleFromSnapshot);
   }
 
-// user
+// ---------------------------------------------user bookmarks
+  late String documentId;
+  setUserBookmarks(String userId, Newsletter newsletter) {
+    documentId =
+        _userCollectionReference.doc(userId).collection("bookmarks").doc().id;
+
+    _userCollectionReference.doc(userId).collection("bookmarks").doc().set({
+      "title": newsletter.title,
+      "description": newsletter.description,
+      "readTime": newsletter.readTime,
+      "writer": newsletter.writer,
+      "topic": newsletter.topic,
+      "imageUrl": newsletter.imageUrl,
+      "timestamp": Timestamp.now()
+    });
+  }
+
+  unsetUserBookmark(String userId) {
+    _userCollectionReference
+        .doc(userId)
+        .collection("bookmarks")
+        .doc(documentId)
+        .delete();
+  }
+
+  Stream<List<Newsletter>?> getUserBookmarks(String userId) {
+    return _userCollectionReference
+        .doc(userId)
+        .collection("bookmarks")
+        .snapshots()
+        .map(_newsletterFromSnapshot);
+  }
+
+// -------------------------------------------user
   Future<DocumentSnapshot> get userData {
     return _userCollectionReference.doc(uid).get();
   }

@@ -30,6 +30,11 @@ class ArticleList extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
+          if (snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text("You don't have articles yet."),
+            );
+          }
 
           final articles = snapshot.data;
           debugPrint(articles.toString());

@@ -1,41 +1,24 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../services/database.dart';
 import '../models/newsletter.dart';
 import 'cached_image.dart';
 
-class NewsletterCard extends StatefulWidget {
-  final Newsletter newsletter;
+class BookmarkCard extends StatefulWidget {
+  final Newsletter bookmark;
 
-  const NewsletterCard({Key? key, required this.newsletter}) : super(key: key);
+  const BookmarkCard({
+    Key? key,
+    required this.bookmark,
+  }) : super(key: key);
 
   @override
-  State<NewsletterCard> createState() => _NewsletterCardState();
+  State<BookmarkCard> createState() => _BookmarkCardState();
 }
 
-class _NewsletterCardState extends State<NewsletterCard>
+class _BookmarkCardState extends State<BookmarkCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
-  final DatabaseService db = DatabaseService();
-  bool isBookmarked = false;
-
-  _updateBookmarkState(String userId, Newsletter newsletter) async {
-    if (isBookmarked) {
-      var result = db.unsetUserBookmark(userId);
-      debugPrint("unset bookmark");
-      debugPrint("RESULT : $result");
-    } else {
-      db.setUserBookmarks(userId, newsletter);
-      debugPrint("Set bookmark");
-    }
-
-    setState(() {
-      isBookmarked = !isBookmarked;
-    });
-  }
 
   @override
   void initState() {
@@ -56,8 +39,6 @@ class _NewsletterCardState extends State<NewsletterCard>
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<User?>(context);
-
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Card(
@@ -74,9 +55,9 @@ class _NewsletterCardState extends State<NewsletterCard>
                 topRight: Radius.circular(10),
               ),
               child: Hero(
-                tag: widget.newsletter.imageUrl,
+                tag: widget.bookmark.imageUrl,
                 child: CachedNetworkImageWidget(
-                  imageUrl: widget.newsletter.imageUrl,
+                  imageUrl: widget.bookmark.imageUrl,
                   imageBuilder: (context, imageProvider) => Container(
                     height: 80,
                     width: double.infinity,
@@ -103,7 +84,7 @@ class _NewsletterCardState extends State<NewsletterCard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      widget.newsletter.title,
+                      widget.bookmark.title,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -111,7 +92,7 @@ class _NewsletterCardState extends State<NewsletterCard>
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "${widget.newsletter.description.substring(0, 40)}...",
+                      "${widget.bookmark.description.substring(0, 40)}...",
                       // style: const TextStyle(overflow: TextOverflow.visible),
                     ),
                     const SizedBox(height: 10),
@@ -125,7 +106,7 @@ class _NewsletterCardState extends State<NewsletterCard>
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            widget.newsletter.readTime,
+                            widget.bookmark.readTime,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -141,7 +122,7 @@ class _NewsletterCardState extends State<NewsletterCard>
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            widget.newsletter.writer,
+                            widget.bookmark.writer,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -163,17 +144,17 @@ class _NewsletterCardState extends State<NewsletterCard>
                           ),
                           InkWell(
                             onTap: () {
-                              _updateBookmarkState(
-                                user!.uid,
-                                widget.newsletter,
-                              );
+                              // _updateBookmarkState
                             },
-                            child: Icon(
-                              isBookmarked
-                                  ? Icons.bookmark
-                                  : Icons.bookmark_border,
+                            child: const Icon(
+                              // _isBookmarked
+                              Icons.bookmark,
+                              // : Icons.bookmark_border,
                               size: 18,
-                              color: isBookmarked ? Colors.blue : Colors.black,
+                              color:
+                                  // _isBookmarked
+                                  // ? Colors.blue
+                                  Colors.black,
                             ),
                           ),
                           const SizedBox(
@@ -198,7 +179,7 @@ class _NewsletterCardState extends State<NewsletterCard>
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                widget.newsletter.topic,
+                                widget.bookmark.topic,
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
