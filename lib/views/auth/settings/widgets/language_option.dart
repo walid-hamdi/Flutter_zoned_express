@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LanguageOption extends StatelessWidget {
-  final String selectedLanguage;
-  final Function(String? val) onChangeLanguage;
+  final Locale selectedLanguage;
+  final Function(Locale? val) onChangeLanguage;
 
   const LanguageOption({
     Key? key,
@@ -14,23 +14,22 @@ class LanguageOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: DropdownButton(
-        value: selectedLanguage,
-        items: const [
-          DropdownMenuItem(
-            value: "English",
-            child: Text("English"),
-          ),
-          DropdownMenuItem(
-            value: "Français",
-            child: Text("Français"),
-          ),
-          DropdownMenuItem(
-            value: "Hindi",
-            child: Text("Hindi"),
-          ),
-        ],
-        onChanged: onChangeLanguage,
+      child: Center(
+        child: DropdownButton<Locale>(
+          value: selectedLanguage,
+          items: WidgetsFlutterBinding.ensureInitialized()
+              .window
+              .locales
+              .map((locale) {
+            return DropdownMenuItem<Locale>(
+              value: locale,
+              child: Text(
+                locale.countryCode.toString(),
+              ),
+            );
+          }).toList(),
+          onChanged: onChangeLanguage,
+        ),
       ),
     );
   }

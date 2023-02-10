@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../models/newsletter.dart';
 import '../models/article.dart';
 
@@ -127,5 +128,15 @@ class DatabaseService {
       "phone": phone,
       "photo": photo,
     });
+  }
+
+  Future<void> setUserPhoto(
+      {String? userId, Future<String>? downloadUrl}) async {
+    // Use FirebaseStorage to upload the photo
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .update({'photo': downloadUrl});
   }
 }

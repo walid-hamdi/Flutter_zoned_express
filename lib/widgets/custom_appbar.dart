@@ -15,6 +15,14 @@ class CustomAppBar extends AppBar {
             onPressed: () {
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
+              } else {
+                // Navigator.pushAndRemoveUntil(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const HomeView(),
+                //   ),
+                //   (route) => false,
+                // );
               }
             },
           ),

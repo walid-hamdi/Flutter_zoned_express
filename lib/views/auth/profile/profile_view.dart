@@ -2,16 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zoned_express/utils/constants.dart';
 
 import '../../../services/database.dart';
 import '../../../widgets/custom_appbar.dart';
-// import '../../widgets/custom_container.dart';
 import '../../../widgets/loading.dart';
 import '../../../widgets/scaffold_wrapper.dart';
-import '../../../widgets/cached_image.dart';
 import '../settings/settings_view.dart';
 import "../../../services/auth.dart";
+import "../../../widgets/custom_avatar_photo.dart";
 
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
@@ -67,22 +65,7 @@ class ProfileView extends StatelessWidget {
                   const SizedBox(
                     height: 16,
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: CachedNetworkImageWidget(
-                      imageUrl: data["photo"] ?? defaultProfilePlaceholderPhoto,
-                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                        radius: 40,
-                        backgroundImage: imageProvider,
-                      ),
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => const SizedBox(
-                        height: 90,
-                        child: Icon(Icons.error),
-                      ),
-                    ),
-                  ),
+                  CustomAvatarPhoto(data: data),
                   const SizedBox(
                     height: 16,
                   ),
