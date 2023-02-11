@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import '../../../models/newsletter.dart';
 import '../models/article.dart';
@@ -80,7 +81,7 @@ class DatabaseService {
 
 // ---------------------------------------------user bookmarks
   late String documentId;
-  setUserBookmarks(String userId, Newsletter newsletter) {
+  setUserBookmarks(String? userId, Newsletter newsletter) {
     documentId =
         _userCollectionReference.doc(userId).collection("bookmarks").doc().id;
 
@@ -95,7 +96,7 @@ class DatabaseService {
     });
   }
 
-  unsetUserBookmark(String userId) {
+  unsetUserBookmark(String? userId) {
     _userCollectionReference
         .doc(userId)
         .collection("bookmarks")
@@ -103,7 +104,7 @@ class DatabaseService {
         .delete();
   }
 
-  Stream<List<Newsletter>?> getUserBookmarks(String userId) {
+  Stream<List<Newsletter>?> getUserBookmarks(String? userId) {
     return _userCollectionReference
         .doc(userId)
         .collection("bookmarks")
@@ -117,17 +118,22 @@ class DatabaseService {
   }
 
   Future updateUserInfo({
+    String? userId,
     String? username,
     String? email,
     String? phone,
     String? photo,
   }) async {
-    return await _userCollectionReference.doc(uid).set({
-      "username": username,
-      "email": email,
-      "phone": phone,
-      "photo": photo,
-    });
+    try {
+      return await _userCollectionReference.doc(userId).set({
+        "username": username,
+        "email": email,
+        "phone": phone,
+        "photo": photo,
+      });
+    } catch (e) {
+      debugPrint("ERROR UPDATE :$e");
+    }
   }
 
   Future<void> setUserPhoto(

@@ -86,6 +86,9 @@ class _CustomInputFieldState extends State<CustomInputField>
         child: TextFormField(
           initialValue: widget.initialValue,
           obscureText: widget.obscureText,
+          onTapOutside: (val) {
+            _onFocusChanged(false);
+          },
           onEditingComplete: () {
             _onFocusChanged(false);
           },

@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/database.dart';
 import '../../../utils/languages/local_notifier.dart';
 import '../../../utils/languages/my_app_localizations.dart';
+import '../../../utils/theme/theme_provider.dart';
+import '../../../utils/user/user_provider.dart';
 import '../../../widgets/custom_avatar_photo.dart';
 import '../../../widgets/error_msg.dart';
 import '../../../widgets/loading.dart';
@@ -13,7 +15,6 @@ import '../../../widgets/scaffold_wrapper.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_input_field.dart';
 import "../../../widgets/custom_switch.dart";
-// import "../../../services/auth.dart";
 import 'widgets/language_option.dart';
 
 class SettingsView extends StatefulWidget {
@@ -25,42 +26,12 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   final _formKey = GlobalKey<FormState>();
-  late String _photo;
-  late String _username;
-  late String _phone;
-  late Locale _selectedLocale;
-  ThemeMode _themeMode = ThemeMode.light;
-
-  var _error = "";
+  String? _photo;
+  String? _username;
+  String? _phone;
+  Locale? _selectedLocale;
+  String _error = "";
   bool _loading = false;
-
-  updateOnPressed() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _loading = true;
-      });
-      // do authenticate
-      var result = await DatabaseService().updateUserInfo(
-        username: _username,
-        phone: _phone,
-        photo: _photo,
-      );
-      if (result == null) {
-        setState(
-          () {
-            _error = "Error occurred.";
-            _loading = false;
-          },
-        );
-      }
-    }
-  }
-
-  // String? _emailValidator(String? val) => val!.isEmpty ? "Enter Email" : null;
-  String? _usernameValidator(String? val) =>
-      val!.isEmpty ? "Enter username" : null;
-
-  String? _phoneValidator(String? val) => val!.isEmpty ? "Enter phone" : null;
 
   @override
   void initState() {
@@ -68,47 +39,44 @@ class _SettingsViewState extends State<SettingsView> {
     _selectedLocale = const Locale('en', 'US');
   }
 
-  void _toggleTheme() {
-    setState(() {
-      _themeMode =
-          _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    });
-  }
-
-  _onChangedTheme(value) {
-    _toggleTheme();
-  }
-
   _onChangeUsername(String? val) {
     setState(() {
-      _username = val!;
+      _username = val;
     });
   }
 
   _onChangePhone(String? val) {
     setState(() {
-      _phone = val!;
+      _phone = val;
     });
   }
 
   void _selectLanguage(Locale? locale) {
     setState(() {
-      _selectedLocale = locale!;
+      _selectedLocale = locale;
     });
     Provider.of<LocaleNotifier>(context, listen: false).setLocale(locale!);
   }
 
+  onChangedTheme(bool value) {
+    toggleTheme(context);
+  }
+
+  String? _usernameValidator(String? val) =>
+      val!.isEmpty ? "Enter username" : null;
+
+  String? _phoneValidator(String? val) => val!.isEmpty ? "Enter phone" : null;
+
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<User?>(context);
+    final User? user = getUser(context);
 
     return Theme(
-      data: Theme.of(context).copyWith(
-        brightness:
-            _themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
-      ),
+      data: getTheme(context),
       child: _loading
-          ? const Loading()
+          ? const Center(
+              child: Loading(),
+            )
           : ScaffoldWrapper(
               appBar: AppBar(
                 title: Text(MyAppLocalizations.of(context)?.settingsTitle ??
@@ -116,6 +84,7 @@ class _SettingsViewState extends State<SettingsView> {
               ),
               child: Container(
                 padding: const EdgeInsets.all(16),
+                alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: FutureBuilder(
                     future: DatabaseService(uid: user?.uid).userData,
@@ -135,7 +104,10 @@ class _SettingsViewState extends State<SettingsView> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              CustomAvatarPhoto(data: data),
+                              CustomAvatarPhoto(
+                                data: data,
+                                mutable: true,
+                              ),
                               const SizedBox(
                                 height: 20,
                               ),
@@ -159,8 +131,8 @@ class _SettingsViewState extends State<SettingsView> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              CustomBottom(
-                                onPressed: updateOnPressed,
+                              CustomButton(
+                                onPressed: _updateOnPressed,
                                 label: "Update",
                               ),
                               CustomErrorMessage(errorMsg: _error),
@@ -172,12 +144,16 @@ class _SettingsViewState extends State<SettingsView> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   LanguageOption(
-                                    selectedLanguage: _selectedLocale,
+                                    selectedLanguage: _selectedLocale!,
                                     onChangeLanguage: _selectLanguage,
                                   ),
                                   CustomSwitch(
-                                    value: _themeMode == ThemeMode.light,
-                                    onChanged: _onChangedTheme,
+                                    value: !isDarkMode(context),
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        toggleTheme(context);
+                                      });
+                                    },
                                   ),
                                 ],
                               ),
@@ -188,7 +164,9 @@ class _SettingsViewState extends State<SettingsView> {
                           ),
                         );
                       } else {
-                        return const Loading();
+                        return const Center(
+                          child: Loading(),
+                        );
                       }
                     },
                   ),
@@ -196,5 +174,34 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
     );
+  }
+
+  _updateOnPressed() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+      final User? user = getUser(context);
+      debugPrint(user!.uid);
+
+      var result = await DatabaseService().updateUserInfo(
+        userId: user.uid,
+        username: _username ?? "",
+        phone: _phone ?? "",
+        photo: _photo ?? "",
+      );
+      if (result == null) {
+        setState(
+          () {
+            _error = "Error occurred.";
+            _loading = false;
+          },
+        );
+      } else {
+        debugPrint("Update or not");
+        if (!mounted) return;
+        Navigator.pop(context);
+      }
+    }
   }
 }

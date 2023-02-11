@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/article.dart';
+import '../views/article_details/article_details_view.dart';
 import 'article_card.dart';
 
 class ArticleList extends StatelessWidget {
@@ -37,15 +38,26 @@ class ArticleList extends StatelessWidget {
           }
 
           final articles = snapshot.data;
-          debugPrint(articles.toString());
 
           return ListView.builder(
             itemCount: articles!.length,
             itemBuilder: (context, index) {
               final article = articles[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: ArticleCard(article: article),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArticleDetailsView(
+                        article: articles[index],
+                      ),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: ArticleCard(article: article),
+                ),
               );
             },
           );

@@ -7,11 +7,13 @@ import '../views/newsletter_details/newsletter_details_view.dart';
 class NewsletterList extends StatelessWidget {
   final Stream<List<Newsletter>?> newsletters;
   final String? searchTerm;
+  final String? categoryItem;
 
   const NewsletterList({
     Key? key,
     required this.newsletters,
     required this.searchTerm,
+    this.categoryItem,
   }) : super(key: key);
 
   @override
@@ -38,11 +40,20 @@ class NewsletterList extends StatelessWidget {
             );
           }
 
-          final filteredNewsletters = snapshot.data!
+// filter by search term
+          var filteredNewsletters = snapshot.data!
               .where((newsletter) => newsletter.title
                   .toLowerCase()
                   .contains(searchTerm?.toLowerCase() ?? ""))
               .toList();
+// filter by category select item
+          if (categoryItem != "All" && categoryItem != null) {
+            filteredNewsletters = snapshot.data!
+                .where(
+                  (newsletter) => newsletter.topic == categoryItem,
+                )
+                .toList();
+          }
 
           return ListView.builder(
             // shrinkWrap: true,

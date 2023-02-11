@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+import '../views/auth/sign_in/sign_in_view.dart';
 import '../../services/database.dart';
 import '../models/newsletter.dart';
+import '../utils/user/user_provider.dart';
 import 'cached_image.dart';
 
 class NewsletterCard extends StatefulWidget {
@@ -22,11 +23,31 @@ class _NewsletterCardState extends State<NewsletterCard>
   final DatabaseService db = DatabaseService();
   bool isBookmarked = false;
 
-  _updateBookmarkState(String userId, Newsletter newsletter) async {
+  _updateBookmarkState(String? userId, Newsletter newsletter) async {
+    debugPrint(userId);
+    if (userId == null) {
+      debugPrint("Please login first!");
+      final snackBar = SnackBar(
+        content: const Text('Yay! Try to login first!'),
+        action: SnackBarAction(
+          label: 'Login',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SignInView(),
+              ),
+            );
+            // Some code to undo the change.
+          },
+        ),
+      );
+      return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
     if (isBookmarked) {
-      var result = db.unsetUserBookmark(userId);
+      db.unsetUserBookmark(userId);
       debugPrint("unset bookmark");
-      debugPrint("RESULT : $result");
     } else {
       db.setUserBookmarks(userId, newsletter);
       debugPrint("Set bookmark");
@@ -56,7 +77,7 @@ class _NewsletterCardState extends State<NewsletterCard>
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<User?>(context);
+    final User? user = getUser(context);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -103,7 +124,9 @@ class _NewsletterCardState extends State<NewsletterCard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      widget.newsletter.title,
+                      widget.newsletter.title.length >= 20
+                          ? "${widget.newsletter.title.substring(0, 20)}..."
+                          : widget.newsletter.title,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -111,7 +134,9 @@ class _NewsletterCardState extends State<NewsletterCard>
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "${widget.newsletter.description.substring(0, 40)}...",
+                      widget.newsletter.description.length >= 40
+                          ? "${widget.newsletter.description.substring(0, 40)}..."
+                          : widget.newsletter.description,
                       // style: const TextStyle(overflow: TextOverflow.visible),
                     ),
                     const SizedBox(height: 10),
@@ -133,18 +158,22 @@ class _NewsletterCardState extends State<NewsletterCard>
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.blue[200],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            widget.newsletter.writer,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[200],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              widget.newsletter.writer.length >= 15
+                                  ? "${widget.newsletter.writer.substring(0, 10)}..."
+                                  : widget.newsletter.writer,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -159,12 +188,12 @@ class _NewsletterCardState extends State<NewsletterCard>
                             size: 18,
                           ),
                           const SizedBox(
-                            width: 13,
+                            width: 12,
                           ),
                           InkWell(
                             onTap: () {
                               _updateBookmarkState(
-                                user!.uid,
+                                user?.uid,
                                 widget.newsletter,
                               );
                             },
@@ -172,12 +201,12 @@ class _NewsletterCardState extends State<NewsletterCard>
                               isBookmarked
                                   ? Icons.bookmark
                                   : Icons.bookmark_border,
-                              size: 18,
+                              size: 22,
                               color: isBookmarked ? Colors.blue : Colors.black,
                             ),
                           ),
                           const SizedBox(
-                            width: 13,
+                            width: 12,
                           ),
                           const Icon(
                             Icons.share,

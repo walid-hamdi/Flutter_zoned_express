@@ -10,20 +10,13 @@ class CustomAppBar extends AppBar {
           key: key,
           title: Text(title),
           centerTitle: true,
+          elevation: 1,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
-              } else {
-                // Navigator.pushAndRemoveUntil(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const HomeView(),
-                //   ),
-                //   (route) => false,
-                // );
-              }
+              } else {}
             },
           ),
           actions: [

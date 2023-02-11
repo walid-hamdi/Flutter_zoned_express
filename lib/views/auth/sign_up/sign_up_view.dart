@@ -1,6 +1,9 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:zoned_express/views/auth/profile/profile_view.dart";
 
 import "../../../services/auth.dart";
+import "../../../utils/theme/theme_provider.dart";
 import "../../../widgets/custom_button.dart";
 import '../../../widgets/custom_container.dart';
 import "../../../widgets/error_msg.dart";
@@ -25,27 +28,7 @@ class _SignUpViewState extends State<SignUpView> {
   var _error = "";
   bool _loading = false;
 
-  signUpOnPressed() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _loading = true;
-      });
-      // do authenticate
-      var result = await _auth.registerWithEmailAndPassword(
-        username: _username,
-        email: _email,
-        password: _password,
-      );
-      if (result == null) {
-        setState(
-          () {
-            _error = "Error occurred.";
-            _loading = false;
-          },
-        );
-      }
-    }
-  }
+  _signUpOnPressed() async {}
 
   _onChangeUsername(String? val) {
     setState(() {
@@ -94,60 +77,89 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? const Loading()
-        : ScaffoldWrapper(
-            appBar: AppBar(
-              title: const Text("Sign Up"),
-            ),
-            child: CustomContainer(
-              // padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomInputField(
-                        hintText: "Username",
-                        icon: Icons.person,
-                        onChange: _onChangeUsername,
-                        validator: _usernameValidator,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomInputField(
-                        hintText: "Email",
-                        icon: Icons.email,
-                        onChange: _onChangeEmail,
-                        validator: _emailValidator,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomInputField(
-                        obscureText: true,
-                        hintText: "Password",
-                        icon: Icons.lock,
-                        onChange: _onChangePassword,
-                        validator: _passwordValidator,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomBottom(
-                        onPressed: signUpOnPressed,
-                        label: "Create",
-                      ),
-                      CustomErrorMessage(errorMsg: _error),
-                    ],
+    return Theme(
+      data: getTheme(context),
+      child: _loading
+          ? const Loading()
+          : ScaffoldWrapper(
+              appBar: AppBar(
+                title: const Text("Sign Up"),
+              ),
+              child: CustomContainer(
+                // padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomInputField(
+                          hintText: "Username",
+                          icon: Icons.person,
+                          onChange: _onChangeUsername,
+                          validator: _usernameValidator,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomInputField(
+                          hintText: "Email",
+                          icon: Icons.email,
+                          onChange: _onChangeEmail,
+                          validator: _emailValidator,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomInputField(
+                          obscureText: true,
+                          hintText: "Password",
+                          icon: Icons.lock,
+                          onChange: _onChangePassword,
+                          validator: _passwordValidator,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _loading = true;
+                              });
+                              // do authenticate
+                              User? result =
+                                  await _auth.registerWithEmailAndPassword(
+                                      username: _username,
+                                      email: _email,
+                                      password: _password);
+                              if (result == null) {
+                                setState(() {
+                                  _error = "Error occurred.";
+                                  _loading = false;
+                                });
+                              } else {
+                                if (!mounted) return;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileView(),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          label: "Create",
+                        ),
+                        CustomErrorMessage(errorMsg: _error),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          );
+    );
   }
 }

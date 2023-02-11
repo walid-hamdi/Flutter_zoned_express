@@ -9,17 +9,17 @@ void main() async {
   runApp(const MyApp());
 }
 
-// 0- show all bookmarks correctly
-// 1- save the changes of the bookmark in shared preferences
-// 2- solve the category filter issue
-// 3- add the functionality to show the article detail
-// 4- search for bookmark functionality
-// 5- add delete all bookmarks ability
-// 6- add photo and update user info in setting view
-// 7- solve the issue of updating all user info
-// 8- add the functionality to change language of the app
-// 9- add the ability to change the theme of the app
-// 10- add notification in home view when there is anything new
-// 11- in bookmark and profile make the back button in the app bar work to back to previous view in tab bottom   
-// 12- delete bookmark when click to it and it's already marked
-// 13- make sure that the app work in all devices  
+// handle back appbar leading icon to back to previous tab
+// make the bookmark list vertical
+// add bookmark if the user click to bookmark icon
+// store the state of click state to each newsletter card
+// delete if the user click to a tab that is already added to bookmark
+// delete all bookmarks if click to action delete icon on appbar and show warning dialog first
+// handle verification view after sign up and not verified
+// update photo & username(username should be unique) & phone (and later email & password)
+// forget password view
+// handle theme of the app (light and dark)
+// handle languages of the app (selected device languages)
+// apply all exception handlers
+// test the app on various devices
+// apply widget and unit test 

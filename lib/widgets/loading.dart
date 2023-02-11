@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:zoned_express/utils/theme/theme_provider.dart';
 
 class Loading extends StatelessWidget {
   const Loading({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class Loading extends StatelessWidget {
       color: Colors.transparent,
       child: Center(
         child: SpinKitRotatingCircle(
-          color: Colors.blue[600],
+          color: getTheme(context).primaryColorLight,
           size: 50.0,
         ),
       ),

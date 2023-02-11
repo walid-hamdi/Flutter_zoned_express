@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import './custom_colors.dart';
 
 final ThemeData lightTheme = ThemeData(
-  // primarySwatch: Colors.blue,
+  // primarySwatch: Colors.red,
   brightness: Brightness.light,
-  // accentColor: Colors.red,
   fontFamily: 'Georgia',
   textTheme: const TextTheme(
     headlineLarge: TextStyle(
@@ -23,17 +22,17 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
   colorScheme: ColorScheme.fromSwatch(
-    primarySwatch:
-        MaterialColor(CustomColors.primaryColor.value, CustomColors.colorCodes),
+    primarySwatch: MaterialColor(
+        CustomColors.lightPrimaryColor.value, CustomColors.lightColorCodes),
   ).copyWith(
-    secondary: CustomColors.accentColor,
+    primary: CustomColors.lightPrimaryColor,
+    secondary: CustomColors.lightAccentColor,
   ),
 );
 
 final ThemeData darkTheme = ThemeData(
-  // primarySwatch: Colors.grey,
+  // primarySwatch: Colors.red,
   brightness: Brightness.dark,
-  // accentColor: Colors.yellow,
   fontFamily: 'Helvetica',
   textTheme: const TextTheme(
     headlineLarge: TextStyle(
@@ -51,9 +50,10 @@ final ThemeData darkTheme = ThemeData(
     ),
   ),
   colorScheme: ColorScheme.fromSwatch(
-    primarySwatch:
-        MaterialColor(CustomColors.primaryColor.value, CustomColors.colorCodes),
+    primarySwatch: MaterialColor(
+        CustomColors.darkPrimaryColor.value, CustomColors.darkColorCodes),
   ).copyWith(
-    secondary: CustomColors.accentColor,
+    primary: CustomColors.darkPrimaryColor,
+    secondary: CustomColors.darkAccentColor,
   ),
 );

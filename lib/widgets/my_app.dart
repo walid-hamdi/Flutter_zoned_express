@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../../themes/theme_notifier.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../services/auth.dart';
 import '../utils/languages/local_notifier.dart';
@@ -16,8 +17,15 @@ class MyApp extends StatelessWidget {
     return StreamProvider<User?>.value(
         initialData: null,
         value: AuthService().user,
-        child: ChangeNotifierProvider(
-          create: (context) => LocaleNotifier(),
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<LocaleNotifier>(
+              create: (_) => LocaleNotifier(),
+            ),
+            ChangeNotifierProvider<ThemeNotifier>(
+              create: (_) => ThemeNotifier(),
+            ),
+          ],
           child: MaterialApp(
             // supportedLocales: supportedLocales,
             supportedLocales:
@@ -28,9 +36,9 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
             ],
             title: 'Zoned Express',
-            theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
-            themeMode: ThemeMode.light,
+            // theme: ThemeData.light(),
+            // darkTheme: ThemeData.dark(),
+            // themeMode: ThemeMode.light,
             debugShowCheckedModeBanner: false,
             home: const CustomBottomBar(),
           ),

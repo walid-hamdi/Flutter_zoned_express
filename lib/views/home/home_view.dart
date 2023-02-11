@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/article.dart';
 import '../../models/newsletter.dart';
+import '../../utils/theme/theme_provider.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/scaffold_wrapper.dart';
 import '../../widgets/label.dart';
@@ -33,32 +34,35 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldWrapper(
-      child: CustomContainer(
-        child: ListView(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            const Navbar(),
-            const SizedBox(height: 22),
-            SearchBox(
-              onChanged: _updateSearchTerm,
-            ),
-            const Label(
-              label: 'Newsletters',
-            ),
-            NewsletterList(
-              searchTerm: _searchTerm,
-              newsletters: _newslettersStream,
-            ),
-            const Label(
-              label: 'Articles',
-            ),
-            ArticleList(
-              articles: _articlesStream,
-            ),
-          ],
+    return Theme(
+      data: getTheme(context),
+      child: ScaffoldWrapper(
+        child: CustomContainer(
+          child: ListView(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              const Navbar(),
+              const SizedBox(height: 22),
+              SearchBox(
+                onChanged: _updateSearchTerm,
+              ),
+              const Label(
+                label: 'Newsletters',
+              ),
+              NewsletterList(
+                searchTerm: _searchTerm,
+                newsletters: _newslettersStream,
+              ),
+              const Label(
+                label: 'Articles',
+              ),
+              ArticleList(
+                articles: _articlesStream,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -40,6 +40,7 @@ class AuthService {
         phone: defaultPhoneProfile,
         photo: defaultProfilePlaceholderPhoto,
       );
+      result.user!.sendEmailVerification();
       return result.user;
     } catch (e) {
       return null;

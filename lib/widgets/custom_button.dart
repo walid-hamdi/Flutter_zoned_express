@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomBottom extends StatelessWidget {
-  const CustomBottom(
+class CustomButton extends StatelessWidget {
+  const CustomButton(
       {Key? key,
       required this.onPressed,
       required this.label,
