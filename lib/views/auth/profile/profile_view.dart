@@ -58,10 +58,11 @@ class ProfileView extends StatelessWidget {
                 child: Text("Internet Issue"),
               );
             }
-            final myData = snapshot.data;
+
             if (snapshot.hasData) {
-              if (myData!.exists && myData.data() != null) {
-                final data = snapshot.data!.data() as Map<String, dynamic>;
+              final myData = snapshot.data;
+              if (myData?.data() != null) {
+                final data = myData?.data() as Map<String, dynamic>;
 
                 return ListView(
                   children: [

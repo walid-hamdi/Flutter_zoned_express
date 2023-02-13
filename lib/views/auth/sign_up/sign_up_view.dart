@@ -137,21 +137,18 @@ class _SignUpViewState extends State<SignUpView> {
         _loading = true;
       });
 
-      var user = await _auth.registerWithEmailAndPassword(
-          context: context,
-          username: _username,
-          email: _email,
-          password: _password);
-
-      setState(() {
-        _loading = false;
-      });
-      // debugPrint(user.toString());
-      if (user != null) {
-        if (!mounted) return;
-
+      await _auth
+          .registerWithEmailAndPassword(
+              context: context,
+              username: _username,
+              email: _email,
+              password: _password)
+          .whenComplete(() {
+        setState(() {
+          _loading = false;
+        });
         Navigator.pushReplacementNamed(context, Routes.emailVerification);
-      }
+      });
     }
   }
 }

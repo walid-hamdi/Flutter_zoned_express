@@ -114,17 +114,17 @@ class DatabaseService {
   }
 
 // -------------------------------------------user
-  Future<DocumentSnapshot> get userData {
+  Future<DocumentSnapshot<Object?>> get userData {
     return _userCollectionReference.doc(uid).get();
   }
 
   Future updateUserInfo({
-    context,
-    String? userId,
-    String? username,
-    String? email,
-    String? phone,
-    String? photo,
+    required context,
+    required String userId,
+    required String username,
+    required String email,
+    required String phone,
+    required String photo,
   }) async {
     try {
       return await _userCollectionReference.doc(userId).set({
@@ -135,18 +135,25 @@ class DatabaseService {
       });
     } catch (e) {
       String errorMessage = FirebaseExceptionHandler.handleException(e);
+      return ErrorUtil.showErrorDialog(context, errorMessage);
+    }
+  }
+
+  Future setUserPhoto(
+      {context, String? userId, Future<String>? downloadUrl}) async {
+    try {
+      return await _userCollectionReference
+          .doc(userId)
+          .update({'photo': downloadUrl});
+    } catch (e) {
+      String errorMessage = FirebaseExceptionHandler.handleException(e);
       ErrorUtil.showErrorDialog(context, errorMessage);
     }
   }
 
-  Future<void> setUserPhoto(
-      {context, String? userId, Future<String>? downloadUrl}) async {
+  Future deleteUser({required context, required String userId}) async {
     try {
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .update({'photo': downloadUrl});
+      return await _userCollectionReference.doc(userId).delete();
     } catch (e) {
       String errorMessage = FirebaseExceptionHandler.handleException(e);
       ErrorUtil.showErrorDialog(context, errorMessage);

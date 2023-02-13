@@ -17,12 +17,13 @@ class AuthService {
   Future signInWithEmailAndPassword(
       context, String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return null;
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      return result.user;
     } catch (e) {
       String errorMessage = FirebaseExceptionHandler.handleException(e);
       debugPrint(errorMessage);
-      ErrorUtil.showErrorDialog(context, errorMessage);
+      return ErrorUtil.showErrorDialog(context, errorMessage);
     }
   }
 
@@ -39,9 +40,10 @@ class AuthService {
         password: password,
       );
       // register user info
-      final DatabaseService databaseService =
-          DatabaseService(uid: result.user!.uid);
-      databaseService.updateUserInfo(
+      final DatabaseService db = DatabaseService();
+      db.updateUserInfo(
+        context: context,
+        userId: result.user!.uid,
         email: email,
         username: username,
         phone: defaultPhoneProfile,
@@ -53,7 +55,7 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       String errorMessage = FirebaseExceptionHandler.handleException(e);
       debugPrint(errorMessage);
-      ErrorUtil.showErrorDialog(context, errorMessage);
+      return ErrorUtil.showErrorDialog(context, errorMessage);
     }
   }
 
@@ -68,8 +70,8 @@ class AuthService {
   }
 
   // check if user is logged in
-  Future<bool> isLoggedIn() async {
-    final currentUser = _auth.currentUser;
-    return currentUser != null;
-  }
+  // Future<bool> isLoggedIn() async {
+  //   final currentUser = _auth.currentUser;
+  //   return currentUser != null;
+  // }
 }

@@ -9,7 +9,6 @@ import '../../../utils/languages/my_app_localizations.dart';
 import '../../../utils/theme/theme_provider.dart';
 import '../../../utils/user/user_provider.dart';
 import '../../../widgets/custom_avatar_photo.dart';
-import '../../../widgets/error_msg.dart';
 import '../../../widgets/loading.dart';
 import '../../../widgets/scaffold_wrapper.dart';
 import '../../../widgets/custom_button.dart';
@@ -30,7 +29,6 @@ class _SettingsViewState extends State<SettingsView> {
   String? _username;
   String? _phone;
   Locale? _selectedLocale;
-  String _error = "";
   bool _loading = false;
 
   @override
@@ -139,7 +137,6 @@ class _SettingsViewState extends State<SettingsView> {
                                 onPressed: _updateOnPressed,
                                 label: "Update",
                               ),
-                              CustomErrorMessage(errorMsg: _error),
                               const SizedBox(
                                 height: 20,
                               ),
@@ -187,21 +184,23 @@ class _SettingsViewState extends State<SettingsView> {
       });
       final User? user = getUser(context);
 
-      await DatabaseService().updateUserInfo(
+      await DatabaseService()
+          .updateUserInfo(
         context: context,
         userId: user!.uid,
         username: _username ?? "",
         phone: _phone ?? "",
         photo: _photo ?? "",
+        email: user.email ?? "",
+      )
+          .whenComplete(
+        () {
+          setState(() {
+            _loading = false;
+          });
+          Navigator.pop(context);
+        },
       );
-
-      setState(() {
-        _error = "Error occurred.";
-        _loading = false;
-      });
-
-      if (!mounted) return;
-      Navigator.pop(context);
     }
   }
 }

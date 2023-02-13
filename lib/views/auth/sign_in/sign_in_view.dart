@@ -118,14 +118,16 @@ class _SignInViewState extends State<SignInView> {
         _loading = true;
       });
       // do authenticate
-      await _auth.signInWithEmailAndPassword(
+      await _auth
+          .signInWithEmailAndPassword(
         context,
         _email,
         _password,
-      );
-
-      setState(() {
-        _loading = false;
+      )
+          .whenComplete(() {
+        setState(() {
+          _loading = false;
+        });
       });
     }
   }

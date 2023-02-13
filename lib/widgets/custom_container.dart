@@ -10,7 +10,7 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
+      // alignment: Alignment.center,
       height: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: child,

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:zoned_express/widgets/custom_bottom_bar.dart';
 
 import '../../themes/theme_notifier.dart';
-import '../../widgets/custom_bottom_bar.dart';
 import '../services/firebase/auth.dart';
 import '../utils/languages/local_notifier.dart';
 import "../utils/languages/my_localizations_delegate.dart";
@@ -14,6 +14,7 @@ import '../views/auth/sign_up/sign_up_view.dart';
 import '../views/auth/email_verification/email_verification_view.dart';
 import '../views/auth/profile/profile_view.dart';
 import '../views/auth/settings/settings_view.dart';
+import '../views/splash_screen/splash_screen_view.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -48,8 +49,9 @@ class MyApp extends StatelessWidget {
           // darkTheme: ThemeData.dark(),
           // themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.home,
+          initialRoute: Routes.splashScreen,
           routes: {
+            Routes.splashScreen: (context) => const SplashScreen(),
             Routes.home: (context) => const CustomBottomBar(),
             Routes.login: (context) => const SignInView(),
             Routes.register: (context) => const SignUpView(),
