@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 import '../../../models/newsletter.dart';
-import '../models/article.dart';
+import '../../models/article.dart';
+import '../../utils/error_util.dart';
+import 'firebase_exception_handler.dart';
 
 class DatabaseService {
   final String? uid;
@@ -118,6 +119,7 @@ class DatabaseService {
   }
 
   Future updateUserInfo({
+    context,
     String? userId,
     String? username,
     String? email,
@@ -132,17 +134,22 @@ class DatabaseService {
         "photo": photo,
       });
     } catch (e) {
-      debugPrint("ERROR UPDATE :$e");
+      String errorMessage = FirebaseExceptionHandler.handleException(e);
+      ErrorUtil.showErrorDialog(context, errorMessage);
     }
   }
 
   Future<void> setUserPhoto(
-      {String? userId, Future<String>? downloadUrl}) async {
-    // Use FirebaseStorage to upload the photo
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await firestore
-        .collection('users')
-        .doc(userId)
-        .update({'photo': downloadUrl});
+      {context, String? userId, Future<String>? downloadUrl}) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      await firestore
+          .collection('users')
+          .doc(userId)
+          .update({'photo': downloadUrl});
+    } catch (e) {
+      String errorMessage = FirebaseExceptionHandler.handleException(e);
+      ErrorUtil.showErrorDialog(context, errorMessage);
+    }
   }
 }

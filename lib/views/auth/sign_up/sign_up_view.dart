@@ -1,12 +1,10 @@
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:zoned_express/views/auth/profile/profile_view.dart";
 
-import "../../../services/auth.dart";
+import "../../../services/firebase/auth.dart";
+import "../../../utils/constants.dart";
 import "../../../utils/theme/theme_provider.dart";
 import "../../../widgets/custom_button.dart";
 import '../../../widgets/custom_container.dart';
-import "../../../widgets/error_msg.dart";
 import "../../../widgets/custom_input_field.dart";
 import '../../../widgets/loading.dart';
 import "../../../widgets/scaffold_wrapper.dart";
@@ -25,10 +23,7 @@ class _SignUpViewState extends State<SignUpView> {
   var _email = "";
   var _password = "";
   var _username = "";
-  var _error = "";
   bool _loading = false;
-
-  _signUpOnPressed() async {}
 
   _onChangeUsername(String? val) {
     setState(() {
@@ -124,36 +119,9 @@ class _SignUpViewState extends State<SignUpView> {
                           height: 20,
                         ),
                         CustomButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                _loading = true;
-                              });
-                              // do authenticate
-                              User? result =
-                                  await _auth.registerWithEmailAndPassword(
-                                      username: _username,
-                                      email: _email,
-                                      password: _password);
-                              if (result == null) {
-                                setState(() {
-                                  _error = "Error occurred.";
-                                  _loading = false;
-                                });
-                              } else {
-                                if (!mounted) return;
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfileView(),
-                                  ),
-                                );
-                              }
-                            }
-                          },
+                          onPressed: _signUpOnPressed,
                           label: "Create",
                         ),
-                        CustomErrorMessage(errorMsg: _error),
                       ],
                     ),
                   ),
@@ -161,5 +129,29 @@ class _SignUpViewState extends State<SignUpView> {
               ),
             ),
     );
+  }
+
+  _signUpOnPressed() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+
+      var user = await _auth.registerWithEmailAndPassword(
+          context: context,
+          username: _username,
+          email: _email,
+          password: _password);
+
+      setState(() {
+        _loading = false;
+      });
+      // debugPrint(user.toString());
+      if (user != null) {
+        if (!mounted) return;
+
+        Navigator.pushReplacementNamed(context, Routes.emailVerification);
+      }
+    }
   }
 }

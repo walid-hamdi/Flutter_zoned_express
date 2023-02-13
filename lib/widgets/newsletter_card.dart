@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../views/auth/sign_in/sign_in_view.dart';
-import '../../services/database.dart';
+import '../services/firebase/database.dart';
+import '../utils/constants.dart';
 import '../models/newsletter.dart';
 import '../utils/user/user_provider.dart';
 import 'cached_image.dart';
+import '../utils/snake_bar.dart';
 
 class NewsletterCard extends StatefulWidget {
   final Newsletter newsletter;
@@ -23,39 +24,34 @@ class _NewsletterCardState extends State<NewsletterCard>
   final DatabaseService db = DatabaseService();
   bool isBookmarked = false;
 
+  _handleSnakeBarOnPressed() {
+    Navigator.pushNamed(context, Routes.login);
+  }
+
   _updateBookmarkState(String? userId, Newsletter newsletter) async {
     debugPrint(userId);
     if (userId == null) {
       debugPrint("Please login first!");
-      final snackBar = SnackBar(
-        content: const Text('Yay! Try to login first!'),
-        action: SnackBarAction(
-          label: 'Login',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SignInView(),
-              ),
-            );
-            // Some code to undo the change.
-          },
-        ),
+      showSnakeBar(
+        context: context,
+        content: 'Yay! Try to login first!',
+        label: 'Login',
+        onPressed: _handleSnakeBarOnPressed,
       );
-      return ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
 
-    if (isBookmarked) {
-      db.unsetUserBookmark(userId);
-      debugPrint("unset bookmark");
-    } else {
-      db.setUserBookmarks(userId, newsletter);
-      debugPrint("Set bookmark");
-    }
+      if (isBookmarked) {
+        db.unsetUserBookmark(userId);
+        // TODDO: create dialog for warning before you unset bookmark
+        debugPrint("unset bookmark");
+      } else {
+        db.setUserBookmarks(userId, newsletter);
+        debugPrint("Set bookmark");
+      }
 
-    setState(() {
-      isBookmarked = !isBookmarked;
-    });
+      setState(() {
+        isBookmarked = !isBookmarked;
+      });
+    }
   }
 
   @override

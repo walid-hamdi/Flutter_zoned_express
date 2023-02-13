@@ -1,14 +1,13 @@
 import "package:flutter/material.dart";
 
-import "../../../services/auth.dart";
-import "../../../utils/theme/theme_provider.dart";
+import '../../../services/firebase/auth.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/theme/theme_provider.dart';
 import '../../../widgets/custom_container.dart';
-import "../../../widgets/error_msg.dart";
-import "../../../widgets/custom_input_field.dart";
+import '../../../widgets/custom_input_field.dart';
 import '../../../widgets/loading.dart';
-import "../../../widgets/scaffold_wrapper.dart";
-import "../../../widgets/custom_button.dart";
-import "../sign_up/sign_up_view.dart";
+import '../../../widgets/scaffold_wrapper.dart';
+import '../../../widgets/custom_button.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -23,8 +22,6 @@ class _SignInViewState extends State<SignInView> {
 
   var _email = "";
   var _password = "";
-
-  var _error = "";
   bool _loading = false;
 
   String? _emailValidator(String? val) => val!.isEmpty ? "Enter Email" : null;
@@ -48,38 +45,6 @@ class _SignInViewState extends State<SignInView> {
     setState(() {
       _password = val!;
     });
-  }
-
-  _signInOnPressed() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _loading = true;
-      });
-
-      debugPrint("EMAIL: $_email");
-      debugPrint("PASSWORD: $_password");
-
-      // do authenticate
-      var result = await _auth.signInWithEmailAndPassword(_email, _password);
-      debugPrint(result);
-      if (result == null) {
-        setState(
-          () {
-            _error = "Invalid Credentials.";
-            _loading = false;
-          },
-        );
-      }
-    }
-  }
-
-  _goToCreateAccountOnPressed(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignUpView(),
-      ),
-    );
   }
 
   @override
@@ -138,7 +103,6 @@ class _SignInViewState extends State<SignInView> {
                         const SizedBox(
                           height: 20,
                         ),
-                        CustomErrorMessage(errorMsg: _error),
                       ],
                     ),
                   ),
@@ -146,5 +110,27 @@ class _SignInViewState extends State<SignInView> {
               ),
             ),
     );
+  }
+
+  _signInOnPressed() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+      // do authenticate
+      await _auth.signInWithEmailAndPassword(
+        context,
+        _email,
+        _password,
+      );
+
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _goToCreateAccountOnPressed(BuildContext context) {
+    Navigator.pushNamed(context, Routes.register);
   }
 }

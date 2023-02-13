@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:zoned_express/utils/constants.dart';
+import 'package:flutter/foundation.dart';
+
+import '../../utils/constants.dart';
+import '../../utils/error_util.dart';
 import 'database.dart';
+import 'firebase_exception_handler.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,24 +14,27 @@ class AuthService {
   }
 
   // sign in with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(
+      context, String email, String password) async {
     try {
-      var result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return result.user;
-    } catch (e) {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
       return null;
+    } catch (e) {
+      String errorMessage = FirebaseExceptionHandler.handleException(e);
+      debugPrint(errorMessage);
+      ErrorUtil.showErrorDialog(context, errorMessage);
     }
   }
 
   // register with email and password
   Future registerWithEmailAndPassword({
+    required context,
     required String username,
     required String email,
     required String password,
   }) async {
     try {
-      var result = await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -40,16 +47,24 @@ class AuthService {
         phone: defaultPhoneProfile,
         photo: defaultProfilePlaceholderPhoto,
       );
+
       result.user!.sendEmailVerification();
       return result.user;
-    } catch (e) {
-      return null;
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = FirebaseExceptionHandler.handleException(e);
+      debugPrint(errorMessage);
+      ErrorUtil.showErrorDialog(context, errorMessage);
     }
   }
 
   // sign out
-  Future<void> signOut() async {
-    return await _auth.signOut();
+  Future<void> signOut(context) async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      String errorMessage = FirebaseExceptionHandler.handleException(e);
+      ErrorUtil.showErrorDialog(context, errorMessage);
+    }
   }
 
   // check if user is logged in
@@ -57,9 +72,4 @@ class AuthService {
     final currentUser = _auth.currentUser;
     return currentUser != null;
   }
-
-  // get current user
-  // Future<User> getCurrentUser() async {
-  //   return _auth.currentUser!;
-  // }
 }

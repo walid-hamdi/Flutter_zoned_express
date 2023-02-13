@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../models/newsletter.dart';
-import '../../services/database.dart';
+import '../../services/firebase/database.dart';
 import '../../utils/theme/theme_provider.dart';
 import '../../utils/user/user_provider.dart';
 import '../../widgets/bookmark_list.dart';

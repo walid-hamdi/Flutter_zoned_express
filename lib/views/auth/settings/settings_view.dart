@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/database.dart';
+import '../../../services/firebase/database.dart';
 import '../../../utils/languages/local_notifier.dart';
 import '../../../utils/languages/my_app_localizations.dart';
 import '../../../utils/theme/theme_provider.dart';
@@ -90,7 +90,11 @@ class _SettingsViewState extends State<SettingsView> {
                     future: DatabaseService(uid: user?.uid).userData,
                     builder: (BuildContext context,
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError) return const Text("Error");
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: Text("Internet Issue"),
+                        );
+                      }
 
                       if (snapshot.hasData) {
                         Map<String, dynamic> data =
@@ -182,26 +186,22 @@ class _SettingsViewState extends State<SettingsView> {
         _loading = true;
       });
       final User? user = getUser(context);
-      debugPrint(user!.uid);
 
-      var result = await DatabaseService().updateUserInfo(
-        userId: user.uid,
+      await DatabaseService().updateUserInfo(
+        context: context,
+        userId: user!.uid,
         username: _username ?? "",
         phone: _phone ?? "",
         photo: _photo ?? "",
       );
-      if (result == null) {
-        setState(
-          () {
-            _error = "Error occurred.";
-            _loading = false;
-          },
-        );
-      } else {
-        debugPrint("Update or not");
-        if (!mounted) return;
-        Navigator.pop(context);
-      }
+
+      setState(() {
+        _error = "Error occurred.";
+        _loading = false;
+      });
+
+      if (!mounted) return;
+      Navigator.pop(context);
     }
   }
 }

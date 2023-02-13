@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/database.dart';
+import '../../../services/firebase/auth.dart';
+import '../../../services/firebase/database.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/theme/theme_provider.dart';
 import '../../../utils/user/user_provider.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/loading.dart';
 import '../../../widgets/scaffold_wrapper.dart';
-import '../settings/settings_view.dart';
-import "../../../services/auth.dart";
 import "../../../widgets/custom_avatar_photo.dart";
 
 class ProfileView extends StatelessWidget {
@@ -17,9 +17,10 @@ class ProfileView extends StatelessWidget {
 
   final AuthService _auth = AuthService();
 
+// check user email verification
   @override
   Widget build(BuildContext context) {
-    final User? user = getUser(context);
+    final User user = getUser(context)!;
 
     return Theme(
       data: getTheme(context),
@@ -30,14 +31,9 @@ class ProfileView extends StatelessWidget {
           widget: PopupMenuButton(
             onSelected: (result) async {
               if (result == 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsView(),
-                  ),
-                );
+                Navigator.pushNamed(context, Routes.settings);
               } else if (result == 1) {
-                await _auth.signOut();
+                await _auth.signOut(context);
               }
             },
             itemBuilder: (cnx) => [
@@ -54,14 +50,18 @@ class ProfileView extends StatelessWidget {
           ),
         ),
         child: FutureBuilder(
-            future: DatabaseService(uid: user?.uid).userData,
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasError) return const Text("Error");
-
-              if (snapshot.hasData) {
-                Map<String, dynamic> data =
-                    snapshot.data!.data() as Map<String, dynamic>;
+          future: DatabaseService(uid: user.uid).userData,
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Internet Issue"),
+              );
+            }
+            final myData = snapshot.data;
+            if (snapshot.hasData) {
+              if (myData!.exists && myData.data() != null) {
+                final data = snapshot.data!.data() as Map<String, dynamic>;
 
                 return ListView(
                   children: [
@@ -142,7 +142,11 @@ class ProfileView extends StatelessWidget {
               } else {
                 return const Loading();
               }
-            }),
+            } else {
+              return const Loading();
+            }
+          },
+        ),
       ),
     );
   }

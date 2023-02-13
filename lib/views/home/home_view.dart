@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../models/article.dart';
 import '../../models/newsletter.dart';
+import '../../services/firebase/database.dart';
 import '../../utils/theme/theme_provider.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/scaffold_wrapper.dart';
@@ -9,7 +11,6 @@ import '../../widgets/article_list.dart';
 import 'widgets/navbar.dart';
 import '../../widgets/search_box.dart';
 import '../../widgets/newsletter_list.dart';
-import "../../services/database.dart";
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
