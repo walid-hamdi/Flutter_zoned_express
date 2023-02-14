@@ -35,8 +35,13 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build ios --release --no-codesign
-
-  build_appbundle:
+      - name: Save IPA as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Runner.ipa
+          path: build/ios/iphoneos/Runner.ipa
+           
+  build_apk:
     name: Build Flutter (Android)
     needs: [flutter_test]
     runs-on: ubuntu-latest
@@ -50,4 +55,10 @@ jobs:
           channel: "stable"
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build appbundle
+      - run: flutter build apk --release
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app.apk
+          path: build/app/outputs/apk/release/app-release.apk
