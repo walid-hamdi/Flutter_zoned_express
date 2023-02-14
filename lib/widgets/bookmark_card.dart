@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import '../models/newsletter.dart';
 import 'cached_image.dart';
 
-class ListCard extends StatefulWidget {
-  final Newsletter newsletter;
+class BookmarkCard extends StatefulWidget {
+  final Newsletter bookmark;
 
-  const ListCard({Key? key, required this.newsletter}) : super(key: key);
+  const BookmarkCard({
+    Key? key,
+    required this.bookmark,
+  }) : super(key: key);
 
   @override
-  State<ListCard> createState() => _ListCardState();
+  State<BookmarkCard> createState() => _BookmarkCardState();
 }
 
-class _ListCardState extends State<ListCard>
+class _BookmarkCardState extends State<BookmarkCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
@@ -52,11 +55,11 @@ class _ListCardState extends State<ListCard>
                 topRight: Radius.circular(10),
               ),
               child: Hero(
-                tag: widget.newsletter.imageUrl,
+                tag: widget.bookmark.imageUrl,
                 child: CachedNetworkImageWidget(
-                  imageUrl: widget.newsletter.imageUrl,
+                  imageUrl: widget.bookmark.imageUrl,
                   imageBuilder: (context, imageProvider) => Container(
-                    height: 90,
+                    height: 80,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -68,7 +71,7 @@ class _ListCardState extends State<ListCard>
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => const SizedBox(
-                    height: 90,
+                    height: 80,
                     child: Icon(Icons.error),
                   ),
                 ),
@@ -81,15 +84,15 @@ class _ListCardState extends State<ListCard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      widget.newsletter.title,
+                      widget.bookmark.title,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "${widget.newsletter.description.substring(0, 40)}...",
+                      "${widget.bookmark.description.substring(0, 40)}...",
                       // style: const TextStyle(overflow: TextOverflow.visible),
                     ),
                     const SizedBox(height: 10),
@@ -103,7 +106,7 @@ class _ListCardState extends State<ListCard>
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            widget.newsletter.readTime,
+                            widget.bookmark.readTime,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -119,7 +122,7 @@ class _ListCardState extends State<ListCard>
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            widget.newsletter.writer,
+                            widget.bookmark.writer,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -128,19 +131,39 @@ class _ListCardState extends State<ListCard>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 15),
                     Expanded(
                       child: Row(
                         children: [
-                          const Icon(Icons.thumb_up),
-                          const SizedBox(
-                            width: 10,
+                          const Icon(
+                            Icons.thumb_up,
+                            size: 18,
                           ),
-                          const Icon(Icons.bookmark_border),
                           const SizedBox(
-                            width: 10,
+                            width: 13,
                           ),
-                          const Icon(Icons.share),
+                          InkWell(
+                            onTap: () {
+                              // _updateBookmarkState
+                            },
+                            child: const Icon(
+                              // _isBookmarked
+                              Icons.bookmark,
+                              // : Icons.bookmark_border,
+                              size: 18,
+                              color:
+                                  // _isBookmarked
+                                  // ? Colors.blue
+                                  Colors.black,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 13,
+                          ),
+                          const Icon(
+                            Icons.share,
+                            size: 18,
+                          ),
                           const SizedBox(
                             width: 20,
                           ),
@@ -148,17 +171,17 @@ class _ListCardState extends State<ListCard>
                             child: Container(
                               // alignment: Alignment.topLeft,
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                                horizontal: 10,
+                                vertical: 6,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.red[200],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                widget.newsletter.topic,
+                                widget.bookmark.topic,
                                 style: const TextStyle(
-                                  // fontSize: 20,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),

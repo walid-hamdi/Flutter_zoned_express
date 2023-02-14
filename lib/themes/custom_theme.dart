@@ -2,17 +2,58 @@ import 'package:flutter/material.dart';
 
 import './custom_colors.dart';
 
-TextTheme textTheme = const TextTheme(
-  headlineLarge: TextStyle(
-      fontFamily: 'MyCustomFont', fontSize: 72, fontWeight: FontWeight.bold),
+final ThemeData lightTheme = ThemeData(
+  // primarySwatch: Colors.red,
+  brightness: Brightness.light,
+  fontFamily: 'Georgia',
+  textTheme: const TextTheme(
+    headlineLarge: TextStyle(
+      fontFamily: 'MyCustomFont',
+      fontSize: 72,
+      fontWeight: FontWeight.bold,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 20.0,
+      fontWeight: FontWeight.bold,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 18.0,
+      fontStyle: FontStyle.italic,
+    ),
+  ),
+  colorScheme: ColorScheme.fromSwatch(
+    primarySwatch: MaterialColor(
+        CustomColors.lightPrimaryColor.value, CustomColors.lightColorCodes),
+  ).copyWith(
+    primary: CustomColors.lightPrimaryColor,
+    secondary: CustomColors.lightAccentColor,
+  ),
 );
 
-final ThemeData customTheme = ThemeData(
-  textTheme: textTheme,
+final ThemeData darkTheme = ThemeData(
+  // primarySwatch: Colors.red,
+  brightness: Brightness.dark,
+  fontFamily: 'Helvetica',
+  textTheme: const TextTheme(
+    headlineLarge: TextStyle(
+      fontFamily: 'MyCustomFont',
+      fontSize: 74,
+      fontWeight: FontWeight.bold,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 22.0,
+      fontWeight: FontWeight.bold,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 20.0,
+      fontStyle: FontStyle.italic,
+    ),
+  ),
   colorScheme: ColorScheme.fromSwatch(
-    primarySwatch:
-        MaterialColor(CustomColors.primaryColor.value, CustomColors.colorCodes),
+    primarySwatch: MaterialColor(
+        CustomColors.darkPrimaryColor.value, CustomColors.darkColorCodes),
   ).copyWith(
-    secondary: CustomColors.accentColor,
+    primary: CustomColors.darkPrimaryColor,
+    secondary: CustomColors.darkAccentColor,
   ),
 );

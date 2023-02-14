@@ -73,6 +73,10 @@ class _SearchBoxState extends State<SearchBox>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: TextField(
+          onTapOutside: (value) {
+            _onFocusChanged(false);
+            debugPrint("Outside");
+          },
           onChanged: (value) {
             widget.onChanged(value);
           },

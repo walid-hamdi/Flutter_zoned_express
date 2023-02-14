@@ -13,11 +13,12 @@ class CustomBottomBar extends StatefulWidget {
 class _CustomBottomBarState extends State<CustomBottomBar> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+  // ignore: prefer_final_fields
+  static List<Widget> _widgetOptions = const [
     HomeView(),
     ExploreView(),
     BookmarkView(),
-    ProfileView(),
+    Wrapper(),
   ];
 
   @override
