@@ -95,9 +95,9 @@ class DatabaseService {
         .doc(newsletter.id)
         .get();
 
-    final newsletterSnapshot =
-        await _newslettersCollectionReference.doc(newsletter.id).get();
-    debugPrint("Newsletter do  exists : ${newsletterSnapshot.exists}");
+    // final newsletterSnapshot =
+    //     await _newslettersCollectionReference.doc(newsletter.id).get();
+    // debugPrint("Newsletter do  exists : ${newsletterSnapshot.exists}");
 
     if (snapshot.exists) {
       try {
