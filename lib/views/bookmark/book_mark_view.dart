@@ -20,6 +20,7 @@ class BookmarkView extends StatefulWidget {
 
 class _BookmarkViewState extends State<BookmarkView> {
   String? _searchTerm;
+  final DatabaseService _db = DatabaseService();
 
   void _updateSearchTerm(String value) {
     setState(() {
@@ -32,7 +33,7 @@ class _BookmarkViewState extends State<BookmarkView> {
     final User? user = getUser(context);
 
     final Stream<List<Newsletter>?> bookmarksStream =
-        DatabaseService().getUserBookmarks(user?.uid);
+        _db.getUserBookmarks(user?.uid);
 
     return Theme(
       data: getTheme(context),
@@ -41,12 +42,47 @@ class _BookmarkViewState extends State<BookmarkView> {
           context: context,
           title: "Bookmarks",
           widget: Row(
-            children: const [
-              Icon(
-                Icons.delete_outline,
-                color: Colors.white,
+            children: [
+              InkWell(
+                child: const Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text(
+                          'Are you sure you want to delete all your bookmarks?'),
+                      // content: Text(errorMessage),
+                      actions: [
+                        ElevatedButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            debugPrint("Cancel");
+                          },
+                        ),
+                        ElevatedButton(
+                          child: const Text('Delete'),
+                          onPressed: () async {
+                            debugPrint(user?.uid);
+                            debugPrint(user?.email);
+                            _db
+                                .unsetAllUserBookmarks(user?.uid)
+                                .whenComplete(() {
+                              debugPrint("USER ID ${user?.uid}");
+                              Navigator.of(context).pop();
+                              debugPrint("delete");
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 16,
               ),
             ],

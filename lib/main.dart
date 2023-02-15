@@ -9,17 +9,9 @@ void main() async {
   runApp(MyApp());
 }
 
-// handle verification view after sign up and not verified
+
+// WORK ON  IT: add bookmark and delete 
 
 
-
-// handle back appbar leading icon to back to previous tab
-// make the bookmark list vertical
-// add bookmark if the user click to bookmark icon
-// store the state of click state to each newsletter card
-// delete if the user click to a tab that is already added to bookmark
-// delete all bookmarks if click to action delete icon on appbar and show warning dialog first
-// update photo & username(username should be unique) & phone (and later email & password)
-// forget password view
-// handle theme of the app (light and dark)
-// handle languages of the app (selected device languages)
+// display pdf in card item and card details newsletter
+// make book mark list vertical

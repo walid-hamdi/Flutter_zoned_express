@@ -22,6 +22,12 @@ class ArticleList extends StatelessWidget {
       child: StreamBuilder<List<Article>?>(
         stream: articles,
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Center(
+              child: Text('No network connection. Please try again later.'),
+            );
+          }
+
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           }

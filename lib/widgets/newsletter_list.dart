@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/newsletter.dart';
 import 'newsletter_card.dart';
-import '../views/newsletter_details/newsletter_details_view.dart';
+import 'newsletter_pdf_viewer.dart';
 
 class NewsletterList extends StatelessWidget {
   final Stream<List<Newsletter>?> newsletters;
@@ -24,6 +24,12 @@ class NewsletterList extends StatelessWidget {
       child: StreamBuilder<List<Newsletter>?>(
         stream: newsletters,
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Center(
+              child: Text('No network connection. Please try again later.'),
+            );
+          }
+
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
@@ -62,11 +68,19 @@ class NewsletterList extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => NewsletterDetailsView(
+                  //       newsletter: filteredNewsletters[index],
+                  //     ),
+                  //   ),
+                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewsletterDetailsView(
-                        newsletter: filteredNewsletters[index],
+                      builder: (context) => PDFViewer(
+                        pdfLink: filteredNewsletters[index].pdfLink,
                       ),
                     ),
                   );

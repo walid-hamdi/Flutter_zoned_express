@@ -13,7 +13,6 @@ import '../views/auth/sign_in/sign_in_view.dart';
 import '../views/auth/sign_up/sign_up_view.dart';
 import '../views/auth/email_verification/email_verification_view.dart';
 import '../views/auth/profile/profile_view.dart';
-import '../views/auth/settings/settings_view.dart';
 import '../views/splash_screen/splash_screen_view.dart';
 
 class MyApp extends StatelessWidget {
@@ -57,7 +56,7 @@ class MyApp extends StatelessWidget {
             Routes.register: (context) => const SignUpView(),
             Routes.profile: (context) => ProfileView(),
             Routes.emailVerification: (context) => EmailVerificationView(),
-            Routes.settings: (context) => const SettingsView(),
+            // Routes.settings: (context) => const SettingsView(),
           },
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import '../../../models/newsletter.dart';
 import '../../models/article.dart';
@@ -28,6 +29,8 @@ class DatabaseService {
         'writer': newsletter.writer,
         'topic': newsletter.topic,
         'imageUrl': newsletter.imageUrl,
+        'pdfLink': newsletter.pdfLink,
+        'isBookmarked': newsletter.isBookmarked,
       });
     }
   }
@@ -36,12 +39,15 @@ class DatabaseService {
     return snapshot.docs
         .map(
           (doc) => Newsletter(
+            id: doc['id'],
             title: doc['title'],
             description: doc['description'],
             readTime: doc['readTime'],
             writer: doc['writer'],
             topic: doc['topic'],
             imageUrl: doc['imageUrl'],
+            pdfLink: doc['pdfLink'],
+            isBookmarked: doc["isBookmarked"],
           ),
         )
         .toList();
@@ -81,28 +87,78 @@ class DatabaseService {
   }
 
 // ---------------------------------------------user bookmarks
-  late String documentId;
-  setUserBookmarks(String? userId, Newsletter newsletter) {
-    documentId =
-        _userCollectionReference.doc(userId).collection("bookmarks").doc().id;
-
-    _userCollectionReference.doc(userId).collection("bookmarks").doc().set({
-      "title": newsletter.title,
-      "description": newsletter.description,
-      "readTime": newsletter.readTime,
-      "writer": newsletter.writer,
-      "topic": newsletter.topic,
-      "imageUrl": newsletter.imageUrl,
-      "timestamp": Timestamp.now()
-    });
-  }
-
-  unsetUserBookmark(String? userId) {
-    _userCollectionReference
+  Future<dynamic> updateUserBookmark(
+      context, String? userId, Newsletter newsletter) async {
+    final DocumentSnapshot snapshot = await _userCollectionReference
         .doc(userId)
         .collection("bookmarks")
-        .doc(documentId)
-        .delete();
+        .doc(newsletter.id)
+        .get();
+
+    final newsletterSnapshot =
+        await _newslettersCollectionReference.doc(newsletter.id).get();
+    debugPrint("Newsletter do  exists : ${newsletterSnapshot.exists}");
+
+    if (snapshot.exists) {
+      try {
+        await _userCollectionReference
+            .doc(userId)
+            .collection("bookmarks")
+            .doc(newsletter.id)
+            .delete()
+            .whenComplete(() async {
+          // update isBookmarked of newsletter to false;
+          // await _newslettersCollectionReference.doc(newsletter.id).update({
+          //   "isBookmarked": false,
+          // });
+        });
+        return false;
+      } catch (e) {
+        String errorMessage = FirebaseExceptionHandler.handleException(e);
+        return ErrorUtil.showErrorDialog(context, errorMessage);
+      }
+    } else {
+      try {
+        await _userCollectionReference
+            .doc(userId)
+            .collection("bookmarks")
+            .doc(newsletter.id)
+            .set({
+          'id': newsletter.id,
+          "title": newsletter.title,
+          "description": newsletter.description,
+          "readTime": newsletter.readTime,
+          "writer": newsletter.writer,
+          "topic": newsletter.topic,
+          "imageUrl": newsletter.imageUrl,
+          "isBookmarked": newsletter.isBookmarked,
+          "pdfLink": newsletter.pdfLink,
+          "timestamp": Timestamp.now()
+        }).whenComplete(() async {
+          // update the newsletter bookmarked to true
+          // await _newslettersCollectionReference.doc(newsletter.id).update({
+          //   "isBookmarked": true,
+          // });
+        });
+      } catch (e) {
+        String errorMessage = FirebaseExceptionHandler.handleException(e);
+        ErrorUtil.showErrorDialog(context, errorMessage);
+      }
+    }
+    return true;
+  }
+
+  Future<void> unsetAllUserBookmarks(String? userId) async {
+    QuerySnapshot bookmarksQuerySnapshot = await _userCollectionReference
+        .doc(userId)
+        .collection("bookmarks")
+        .get();
+
+    List<DocumentSnapshot> bookmarksDocuments = bookmarksQuerySnapshot.docs;
+
+    for (DocumentSnapshot documentSnapshot in bookmarksDocuments) {
+      await documentSnapshot.reference.delete();
+    }
   }
 
   Stream<List<Newsletter>?> getUserBookmarks(String? userId) {
