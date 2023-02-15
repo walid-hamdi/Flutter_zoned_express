@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../models/newsletter.dart';
 import 'bookmark_card.dart';
-import '../views/newsletter_details/newsletter_details_view.dart';
+import 'newsletter_pdf_viewer.dart';
 
 class BookmarkList extends StatelessWidget {
-  final Stream<List<Newsletter>?> bookmarks;
+  final Stream<List<Newsletter>?>? bookmarks;
   final String? searchTerm;
 
   const BookmarkList({
@@ -22,6 +22,12 @@ class BookmarkList extends StatelessWidget {
       child: StreamBuilder<List<Newsletter>?>(
         stream: bookmarks,
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Center(
+              child: Text('No network connection. Please try again later.'),
+            );
+          }
+
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
@@ -49,11 +55,19 @@ class BookmarkList extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => NewsletterDetailsView(
+                  //       newsletter: filteredBookmarks[index],
+                  //     ),
+                  //   ),
+                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewsletterDetailsView(
-                        newsletter: filteredBookmarks[index],
+                      builder: (context) => PDFViewer(
+                        pdfLink: filteredBookmarks[index].pdfLink,
                       ),
                     ),
                   );
@@ -61,7 +75,7 @@ class BookmarkList extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.2,
                   height: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 2),
+                  margin: const EdgeInsets.only(right: 8),
                   child: BookmarkCard(
                     bookmark: filteredBookmarks[index],
                   ),

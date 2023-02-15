@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zoned_express/utils/error_util.dart';
 
 import '../models/newsletter.dart';
+import '../services/firebase/database.dart';
+import '../utils/user/user_provider.dart';
 import 'cached_image.dart';
 
 class BookmarkCard extends StatefulWidget {
@@ -19,6 +23,7 @@ class _BookmarkCardState extends State<BookmarkCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
+  final DatabaseService _db = DatabaseService();
 
   @override
   void initState() {
@@ -39,6 +44,8 @@ class _BookmarkCardState extends State<BookmarkCard>
 
   @override
   Widget build(BuildContext context) {
+    final User? user = getUser(context);
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Card(
@@ -143,8 +150,14 @@ class _BookmarkCardState extends State<BookmarkCard>
                             width: 13,
                           ),
                           InkWell(
-                            onTap: () {
-                              // _updateBookmarkState
+                            onTap: () async {
+                              ErrorUtil.showErrorDialog(
+                                  context, "You unset this bookmark :)");
+                              await _db.updateUserBookmark(
+                                context,
+                                user?.uid,
+                                widget.bookmark,
+                              );
                             },
                             child: const Icon(
                               // _isBookmarked

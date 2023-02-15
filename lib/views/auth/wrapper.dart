@@ -1,8 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:zoned_express/views/auth/email_verification/email_verification_view.dart";
-import "package:zoned_express/views/auth/sign_in/sign_in_view.dart";
 
+import "../../../views/auth/sign_in/sign_in_view.dart";
 import "../../../widgets/loading.dart";
 import "../../utils/user/user_provider.dart";
 import "./profile/profile_view.dart";
@@ -15,10 +14,24 @@ class Wrapper extends StatelessWidget {
     return FutureBuilder<User>(
       future: waitForUser(context),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.none) {
+          return const Center(
+            child: Text('No network connection. Please try again later.'),
+          );
+        }
+
         if (snapshot.connectionState == ConnectionState.done) {
           User? user = snapshot.data;
+          debugPrint(user?.email);
           if (user != null) {
-            if (!user.emailVerified) return EmailVerificationView();
+            // debugPrint("EMAIL VERIFIED :${user.emailVerified}");
+            // user.reload();
+
+            // if (!user.emailVerified) {
+            //   // return EmailVerificationView();
+            //   ErrorUtil.showErrorDialog(context,
+            //       "Here will implement email verification to allow only user with valid email.");
+            // }
             return ProfileView();
           } else {
             return const SignInView();

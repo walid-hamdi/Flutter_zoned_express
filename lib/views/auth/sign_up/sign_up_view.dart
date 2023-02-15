@@ -147,7 +147,7 @@ class _SignUpViewState extends State<SignUpView> {
         setState(() {
           _loading = false;
         });
-        Navigator.pushReplacementNamed(context, Routes.emailVerification);
+        Navigator.pushReplacementNamed(context, Routes.profile);
       });
     }
   }

@@ -21,38 +21,8 @@ class _NewsletterCardState extends State<NewsletterCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
-  final DatabaseService db = DatabaseService();
+  final DatabaseService _db = DatabaseService();
   bool isBookmarked = false;
-
-  _handleSnakeBarOnPressed() {
-    Navigator.pushNamed(context, Routes.login);
-  }
-
-  _updateBookmarkState(String? userId, Newsletter newsletter) async {
-    debugPrint(userId);
-    if (userId == null) {
-      debugPrint("Please login first!");
-      showSnakeBar(
-        context: context,
-        content: 'Yay! Try to login first!',
-        label: 'Login',
-        onPressed: _handleSnakeBarOnPressed,
-      );
-
-      if (isBookmarked) {
-        db.unsetUserBookmark(userId);
-        // TODDO: create dialog for warning before you unset bookmark
-        debugPrint("unset bookmark");
-      } else {
-        db.setUserBookmarks(userId, newsletter);
-        debugPrint("Set bookmark");
-      }
-
-      setState(() {
-        isBookmarked = !isBookmarked;
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -129,6 +99,9 @@ class _NewsletterCardState extends State<NewsletterCard>
                       ),
                     ),
                     const SizedBox(height: 10),
+                    // PDFViewer(
+                    //   pdfLink: widget.newsletter.pdfLink,
+                    // ),
                     Text(
                       widget.newsletter.description.length >= 40
                           ? "${widget.newsletter.description.substring(0, 40)}..."
@@ -194,11 +167,13 @@ class _NewsletterCardState extends State<NewsletterCard>
                               );
                             },
                             child: Icon(
-                              isBookmarked
+                              widget.newsletter.isBookmarked
                                   ? Icons.bookmark
                                   : Icons.bookmark_border,
                               size: 22,
-                              color: isBookmarked ? Colors.blue : Colors.black,
+                              color: widget.newsletter.isBookmarked
+                                  ? Colors.blue
+                                  : Colors.black,
                             ),
                           ),
                           const SizedBox(
@@ -243,5 +218,29 @@ class _NewsletterCardState extends State<NewsletterCard>
         ),
       ),
     );
+  }
+
+  _updateBookmarkState(String? userId, Newsletter newsletter) async {
+    if (userId == null) {
+      return showSnakeBar(
+        context: context,
+        content: 'Yay! Try to login first!',
+        label: 'Login',
+        onPressed: _handleSnakeBarOnPressed,
+      );
+    }
+
+    final isMarked = await _db.updateUserBookmark(
+      context,
+      userId,
+      newsletter,
+    );
+    setState(() {
+      isBookmarked = isMarked;
+    });
+  }
+
+  _handleSnakeBarOnPressed() {
+    Navigator.pushNamed(context, Routes.login);
   }
 }

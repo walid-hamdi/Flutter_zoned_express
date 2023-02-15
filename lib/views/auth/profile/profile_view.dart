@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../services/firebase/auth.dart';
 import '../../../services/firebase/database.dart';
-import '../../../utils/constants.dart';
+import '../../../utils/error_util.dart';
 import '../../../utils/theme/theme_provider.dart';
 import '../../../utils/user/user_provider.dart';
 import '../../../widgets/custom_appbar.dart';
@@ -31,7 +31,9 @@ class ProfileView extends StatelessWidget {
           widget: PopupMenuButton(
             onSelected: (result) async {
               if (result == 0) {
-                Navigator.pushNamed(context, Routes.settings);
+                // Navigator.pushNamed(context, Routes.settings);
+                ErrorUtil.showErrorDialog(context,
+                    "This feature of changing the user setting not yet done.");
               } else if (result == 1) {
                 await _auth.signOut(context);
               }
@@ -73,68 +75,67 @@ class ProfileView extends StatelessWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          ),
+                    // todo: this part is not appear in some devices
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                height: 10,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              data["username"] ?? 'UserName',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
-                              Text(
-                                data["username"] ?? 'UserName',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 1,
+                              color: Colors.grey[300],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              data["email"] ?? "user@gmail.com",
+                              style: const TextStyle(
+                                fontSize: 18,
                               ),
-                              const SizedBox(
-                                height: 10,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 1,
+                              color: Colors.grey[300],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              data["phone"] ?? ' +123456789',
+                              style: const TextStyle(
+                                fontSize: 18,
                               ),
-                              Container(
-                                width: double.infinity,
-                                height: 1,
-                                color: Colors.grey[300],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                data["email"] ?? "user@gmail.com",
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                width: double.infinity,
-                                height: 1,
-                                color: Colors.grey[300],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                data["phone"] ?? ' +123456789',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
                         ),
                       ),
                     ),

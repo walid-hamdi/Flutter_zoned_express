@@ -5,7 +5,7 @@ class ErrorUtil {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Error'),
+        title: const Text('Warning'),
         content: Text(errorMessage),
         actions: [
           ElevatedButton(
