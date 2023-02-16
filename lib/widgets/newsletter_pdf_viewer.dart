@@ -106,6 +106,7 @@ class _NewsletterPdfViewerState extends State<NewsletterPdfViewer> {
     getFileFromUrl(widget.newsletter.pdfLink).then(
       (value) => {
         setState(() {
+          // ignore: unnecessary_null_comparison
           if (value != null) {
             urlPDFPath = value.path;
             loaded = true;

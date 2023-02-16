@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zoned_express/views/newsletter_details/newsletter_details_view.dart';
 
 import '../models/newsletter.dart';
 import 'newsletter_card.dart';
