@@ -7,7 +7,6 @@ class Newsletter {
   final String topic;
   final String imageUrl;
   final String pdfLink;
-  final bool isBookmarked;
   Newsletter({
     required this.id,
     required this.title,
@@ -17,7 +16,6 @@ class Newsletter {
     required this.topic,
     required this.imageUrl,
     required this.pdfLink,
-    required this.isBookmarked,
   });
 
   contains(String searchTerm) {}

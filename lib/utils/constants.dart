@@ -6,6 +6,7 @@ class Routes {
   static const String login = '/login';
   static const String register = '/register';
   static const String profile = '/profile';
+  static const String wrapper = '/wrapper';
   static const String emailVerification = '/emailVerification';
   static const String settings = '/settings';
   static const String articleDetailsView = '/articleDetailsView';

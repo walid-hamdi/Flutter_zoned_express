@@ -8,10 +8,3 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
-
-
-// WORK ON  IT: add bookmark and delete 
-
-
-// display pdf in card item and card details newsletter
-// make book mark list vertical

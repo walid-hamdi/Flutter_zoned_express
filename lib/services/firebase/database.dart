@@ -30,7 +30,6 @@ class DatabaseService {
         'topic': newsletter.topic,
         'imageUrl': newsletter.imageUrl,
         'pdfLink': newsletter.pdfLink,
-        'isBookmarked': newsletter.isBookmarked,
       });
     }
   }
@@ -47,7 +46,6 @@ class DatabaseService {
             topic: doc['topic'],
             imageUrl: doc['imageUrl'],
             pdfLink: doc['pdfLink'],
-            isBookmarked: doc["isBookmarked"],
           ),
         )
         .toList();
@@ -89,15 +87,15 @@ class DatabaseService {
 // ---------------------------------------------user bookmarks
   Future<dynamic> updateUserBookmark(
       context, String? userId, Newsletter newsletter) async {
+    String label = "";
+
     final DocumentSnapshot snapshot = await _userCollectionReference
         .doc(userId)
         .collection("bookmarks")
         .doc(newsletter.id)
         .get();
 
-    // final newsletterSnapshot =
-    //     await _newslettersCollectionReference.doc(newsletter.id).get();
-    // debugPrint("Newsletter do  exists : ${newsletterSnapshot.exists}");
+    debugPrint("newsletter id : ${newsletter.id}");
 
     if (snapshot.exists) {
       try {
@@ -106,13 +104,10 @@ class DatabaseService {
             .collection("bookmarks")
             .doc(newsletter.id)
             .delete()
-            .whenComplete(() async {
-          // update isBookmarked of newsletter to false;
-          // await _newslettersCollectionReference.doc(newsletter.id).update({
-          //   "isBookmarked": false,
-          // });
+            // ignore: void_checks
+            .whenComplete(() {
+          label = "unset_bookmarked";
         });
-        return false;
       } catch (e) {
         String errorMessage = FirebaseExceptionHandler.handleException(e);
         return ErrorUtil.showErrorDialog(context, errorMessage);
@@ -131,21 +126,18 @@ class DatabaseService {
           "writer": newsletter.writer,
           "topic": newsletter.topic,
           "imageUrl": newsletter.imageUrl,
-          "isBookmarked": newsletter.isBookmarked,
           "pdfLink": newsletter.pdfLink,
           "timestamp": Timestamp.now()
-        }).whenComplete(() async {
-          // update the newsletter bookmarked to true
-          // await _newslettersCollectionReference.doc(newsletter.id).update({
-          //   "isBookmarked": true,
-          // });
+          // ignore: void_checks
+        }).whenComplete(() {
+          label = "set_bookmarked";
         });
       } catch (e) {
         String errorMessage = FirebaseExceptionHandler.handleException(e);
-        ErrorUtil.showErrorDialog(context, errorMessage);
+        return ErrorUtil.showErrorDialog(context, errorMessage);
       }
     }
-    return true;
+    return label;
   }
 
   Future<void> unsetAllUserBookmarks(String? userId) async {
