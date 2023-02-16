@@ -17,7 +17,7 @@ class BookmarkList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 265,
+      height: MediaQuery.of(context).size.height - 200,
       width: MediaQuery.of(context).size.width,
       child: StreamBuilder<List<Newsletter>?>(
         stream: bookmarks,
@@ -51,7 +51,7 @@ class BookmarkList extends StatelessWidget {
 
           return ListView.builder(
             itemCount: filteredBookmarks.length,
-            scrollDirection: Axis.horizontal,
+            scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
@@ -73,7 +73,7 @@ class BookmarkList extends StatelessWidget {
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.2,
-                  height: double.infinity,
+                  height: 265,
                   margin: const EdgeInsets.only(right: 8),
                   child: BookmarkCard(
                     bookmark: filteredBookmarks[index],
