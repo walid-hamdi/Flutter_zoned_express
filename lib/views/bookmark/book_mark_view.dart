@@ -43,43 +43,51 @@ class _BookmarkViewState extends State<BookmarkView> {
           title: "Bookmarks",
           widget: Row(
             children: [
-              InkWell(
-                child: const Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text(
-                          'Are you sure you want to delete all your bookmarks?'),
-                      // content: Text(errorMessage),
-                      actions: [
-                        ElevatedButton(
-                          child: const Text('Cancel'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            debugPrint("Cancel");
-                          },
-                        ),
-                        ElevatedButton(
-                          child: const Text('Delete'),
-                          onPressed: () async {
-                            debugPrint(user?.uid);
-                            debugPrint(user?.email);
-                            _db
-                                .unsetAllUserBookmarks(user?.uid)
-                                .whenComplete(() {
-                              debugPrint("USER ID ${user?.uid}");
-                              Navigator.of(context).pop();
-                              debugPrint("delete");
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  );
+              StreamBuilder<List<Newsletter>?>(
+                stream: bookmarksStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.data != null &&
+                      snapshot.data!.isNotEmpty) {
+                    return InkWell(
+                      child: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.white,
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text(
+                              'Are you sure you want to delete all your bookmarks?',
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  debugPrint("Cancel");
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text('Delete'),
+                                onPressed: () async {
+                                  _db
+                                      .unsetAllUserBookmarks(user?.uid)
+                                      .whenComplete(() {
+                                    Navigator.of(context).pop();
+                                    debugPrint("delete");
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
               const SizedBox(

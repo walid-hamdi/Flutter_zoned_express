@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/firebase/database.dart';
 import '../utils/constants.dart';
@@ -24,8 +25,20 @@ class _NewsletterCardState extends State<NewsletterCard>
   final DatabaseService _db = DatabaseService();
   bool isBookmarked = false;
 
+  void _loadFromPreferences() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String key = widget.newsletter.id;
+
+    bool getIsBookmarked = preferences.getBool(key) ?? false;
+    setState(() {
+      isBookmarked = getIsBookmarked;
+    });
+  }
+
   @override
   void initState() {
+    _loadFromPreferences();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -167,13 +180,11 @@ class _NewsletterCardState extends State<NewsletterCard>
                               );
                             },
                             child: Icon(
-                              widget.newsletter.isBookmarked
+                              isBookmarked
                                   ? Icons.bookmark
                                   : Icons.bookmark_border,
                               size: 22,
-                              color: widget.newsletter.isBookmarked
-                                  ? Colors.blue
-                                  : Colors.black,
+                              color: isBookmarked ? Colors.blue : Colors.black,
                             ),
                           ),
                           const SizedBox(
@@ -230,17 +241,33 @@ class _NewsletterCardState extends State<NewsletterCard>
       );
     }
 
-    final isMarked = await _db.updateUserBookmark(
+    final isMarkedLabel = await _db.updateUserBookmark(
       context,
       userId,
       newsletter,
     );
-    setState(() {
-      isBookmarked = isMarked;
-    });
+
+    if (isMarkedLabel == "set_bookmarked") {
+      _saveToPreferences(true);
+    } else if (isMarkedLabel == "unset_bookmarked") {
+      _saveToPreferences(false);
+    }
   }
 
   _handleSnakeBarOnPressed() {
-    Navigator.pushNamed(context, Routes.login);
+    Navigator.pushNamed(context, Routes.wrapper);
+  }
+
+  void _saveToPreferences(bool value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String key = widget.newsletter.id;
+
+    if (value) {
+      await preferences.setBool(key, value);
+    } else {
+      await preferences.remove(key);
+    }
+
+    _loadFromPreferences();
   }
 }

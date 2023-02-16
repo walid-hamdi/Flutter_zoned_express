@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoned_express/views/newsletter_details/newsletter_details_view.dart';
 
 import '../models/newsletter.dart';
 import 'newsletter_card.dart';
@@ -79,8 +80,8 @@ class NewsletterList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PDFViewer(
-                        pdfLink: filteredNewsletters[index].pdfLink,
+                      builder: (context) => NewsletterPdfViewer(
+                        newsletter: filteredNewsletters[index],
                       ),
                     ),
                   );

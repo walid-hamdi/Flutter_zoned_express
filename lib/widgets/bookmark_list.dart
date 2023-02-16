@@ -66,9 +66,8 @@ class BookmarkList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PDFViewer(
-                        pdfLink: filteredBookmarks[index].pdfLink,
-                      ),
+                      builder: (context) => NewsletterPdfViewer(
+                          newsletter: filteredBookmarks[index]),
                     ),
                   );
                 },

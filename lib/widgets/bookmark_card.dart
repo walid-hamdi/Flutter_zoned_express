@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoned_express/utils/error_util.dart';
 
 import '../models/newsletter.dart';
@@ -153,11 +154,20 @@ class _BookmarkCardState extends State<BookmarkCard>
                             onTap: () async {
                               ErrorUtil.showErrorDialog(
                                   context, "You unset this bookmark :)");
-                              await _db.updateUserBookmark(
+                              await _db
+                                  .updateUserBookmark(
                                 context,
                                 user?.uid,
                                 widget.bookmark,
-                              );
+                              )
+                                  .whenComplete(() async {
+                                //  unset it from local also
+                                SharedPreferences preferences =
+                                    await SharedPreferences.getInstance();
+                                String key = widget.bookmark.id;
+
+                                await preferences.remove(key);
+                              });
                             },
                             child: const Icon(
                               // _isBookmarked
