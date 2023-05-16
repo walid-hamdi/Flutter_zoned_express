@@ -1,4 +1,4 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
-  "cSpell.words": ["appbar", "Firestore", "unfocus", "vsync"]
+  "cSpell.words": ["appbar", "dotenv", "Firestore", "unfocus", "vsync"]
 }

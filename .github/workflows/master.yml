@@ -4,6 +4,22 @@ on:
     branches:
       - master
 
+env:
+  WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+  ANDROID_API_KEY: ${{ secrets.ANDROID_API_KEY }}
+  IOS_API_KEY: ${{ secrets.IOS_API_KEY }}
+  MAC_API_KEY: ${{ secrets.MAC_API_KEY }}
+  WEB_APP_ID: ${{ secrets.WEB_APP_ID }}
+  ANDROID_APP_ID: ${{ secrets.ANDROID_APP_ID }}
+  IOS_APP_ID: ${{ secrets.IOS_APP_ID }}
+  MAC_APP_ID: ${{ secrets.MAC_APP_ID }}
+  MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
+  STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+  IOS_CLIENT_ID: ${{ secrets.IOS_CLIENT_ID }}
+  IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID }}
+
 jobs:
   flutter_test:
     name: Run flutter test and analyze
@@ -35,13 +51,12 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build ios --release --no-codesign
-      
-      - name: Upload IPA
+      - name: Save IPA as artifact
         uses: actions/upload-artifact@v2
         with:
           name: Runner.ipa
           path: build/ios/iphoneos/Runner.ipa
-           
+
   build_apk:
     name: Build Flutter (Android)
     needs: [flutter_test]
@@ -57,7 +72,7 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release
-      
+
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
