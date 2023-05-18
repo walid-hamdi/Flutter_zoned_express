@@ -18,6 +18,7 @@ class LanguageOption extends StatelessWidget {
         child: DropdownButton<Locale>(
           value: selectedLanguage,
           items: WidgetsFlutterBinding.ensureInitialized()
+              // ignore: deprecated_member_use
               .window
               .locales
               .map((locale) {
