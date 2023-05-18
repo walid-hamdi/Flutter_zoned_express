@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           // supportedLocales: supportedLocales,
           supportedLocales:
+              // ignore: deprecated_member_use
               WidgetsFlutterBinding.ensureInitialized().window.locales,
           localizationsDelegates: const [
             MyLocalizationsDelegate(),

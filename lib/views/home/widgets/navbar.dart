@@ -17,8 +17,8 @@ class Navbar extends StatelessWidget {
           onTap: () {
             dismissKeyboard(context);
           },
-          child: Row(
-            children: const [
+          child: const Row(
+            children: [
               Icon(Icons.dashboard_outlined),
               SizedBox(
                 width: 5,
